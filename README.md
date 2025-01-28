@@ -156,5 +156,3 @@ For more information, contact us at support@pylintpro.com.
 Footer
 
 PyLintPro is powered by Flake8 and autopep8, designed to enhance Python code quality with minimal effort.
-
-In this updated `README.md`, the build badge now refers to the `Build and Deploy` workflow in GitHub Actions.
