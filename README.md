@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
 ![Flake8](https://img.shields.io/badge/Flake8-%E2%9C%94-green.svg)
-![CI Status](https://img.shields.io/github/workflow/status/canstralian/PyLintPro/CI%20Pipeline)
+![CI Status](https://img.shields.io/github/workflow/status/canstralian/PyLintPro/Build%20and%20Deploy)
 ![Issues](https://img.shields.io/github/issues/canstralian/PyLintPro)
 [![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/PyLintPro)
 
@@ -157,4 +157,4 @@ Footer
 
 PyLintPro is powered by Flake8 and autopep8, designed to enhance Python code quality with minimal effort.
 
-This `README.md` provides a comprehensive guide to the project, its features, usage, installation instructions, and contribution guidelines. It includes badges for tracking the project's status and integrates with your CI/CD pipeline and Hugging Face deployment.
+In this updated `README.md`, the build badge now refers to the `Build and Deploy` workflow in GitHub Actions.
