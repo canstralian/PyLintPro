@@ -1,0 +1,5 @@
+gradio
+huggingface_hub
+flake8
+transformers
+datasets
