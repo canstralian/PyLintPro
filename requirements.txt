@@ -1,9 +1,9 @@
 fastapi==0.95.2
 uvicorn==0.22.0
-transformers==4.30.0
-torch==2.1.0
-pydantic==1.10.10
-gradio==3.32.0
+transformers==4.38.0
+torch==2.2.0
+pydantic==1.10.13
+gradio==5.11.0
 datasets==2.13.1
 huggingface_hub==0.16.4
 flake8==6.0.0
