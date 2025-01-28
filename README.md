@@ -1,11 +1,15 @@
 # PyLintPro
 
+To replace the "CI Status" badge with something more Pythonic, you can modify the badge URL in the `README.md` file. Here is the updated content for the badge section:
+
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
 ![Flake8](https://img.shields.io/badge/Flake8-%E2%9C%94-green.svg)
-![CI Status](https://img.shields.io/github/workflow/status/canstralian/PyLintPro/Build%20and%20Deploy)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/pylint)
 ![Issues](https://img.shields.io/github/issues/canstralian/PyLintPro)
 [![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/PyLintPro)
+
+Replace the "CI Status" badge on line 6 with the "PyPI - Downloads" badge. You can make this change directly in the `README.md` file.
 
 PyLintPro is a Gradio-based web application designed to help developers improve Python code by making it adhere to [Flake8](https://flake8.pycqa.org/) and [PEP 8](https://pep8.org/) standards. Simply paste your code or upload a `.py` file, and PyLintPro will return a linted version along with a detailed report of fixes. Whether you're working on personal projects or professional codebases, PyLintPro streamlines the process of cleaning and optimizing your Python code.
 
