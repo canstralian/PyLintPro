@@ -1,5 +1,3 @@
-Here’s the full README.md for your project:
-
 # PyLintPro
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
