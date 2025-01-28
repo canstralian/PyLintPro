@@ -1,6 +1,19 @@
 import gradio as gr
+from transformers import pipeline
 from flake8.api import legacy as flake8
 import autopep8
+
+# Initialize the pipeline for text generation
+pipe = pipeline("text-generation", model="replit/replit-code-v1_5-3b", trust_remote_code=True)
+
+def generate_code(prompt, max_length=100, num_return_sequences=1):
+    try:
+        # Use the pipeline to generate code
+        results = pipe(prompt, max_length=max_length, num_return_sequences=num_return_sequences)
+        # Format the generated results
+        return "\n\n".join([res["generated_text"] for res in results])
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 def lint_code(code: str) -> tuple[str, str]:
     """
@@ -48,20 +61,41 @@ def handle_input(code: str, file) -> tuple[str, str]:
         return process_file(file)
     return lint_code(code)
 
-# Create the Gradio interface
-interface = gr.Interface(
-    fn=handle_input,
-    inputs=[
-        gr.Textbox(lines=20, placeholder="Paste your Python code here...", label="Python Code"),
-        gr.File(label="Upload a Python (.py) file", file_types=[".py"])
-    ],
-    outputs=[
-        gr.Textbox(label="Linted Code", lines=20),
-        gr.Textbox(label="Linting Report")
-    ],
-    title="Python Code Linter",
-    description="Paste your Python code or upload a .py file to get a Flake8-compliant, linted version."
-)
+# Gradio interface
+with gr.Blocks() as interface:
+    gr.Markdown("### PyLint Pro: AI Code Generation Tool")
+    
+    # Input fields
+    prompt_input = gr.Textbox(label="Code Prompt", placeholder="Enter your code snippet or logic...")
+    max_length_input = gr.Slider(label="Max Length", minimum=10, maximum=500, value=100)
+    num_return_sequences_input = gr.Slider(label="Number of Outputs", minimum=1, maximum=5, value=1)
+    
+    # Output
+    output_box = gr.Textbox(label="Generated Code", placeholder="The generated code will appear here...", lines=10)
+
+    # Button to trigger code generation
+    generate_button = gr.Button("Generate Code")
+    
+    # Define interaction
+    generate_button.click(
+        generate_code,
+        inputs=[prompt_input, max_length_input, num_return_sequences_input],
+        outputs=output_box,
+    )
+
+    # Existing linting interface
+    gr.Markdown("### Python Code Linter")
+    code_input = gr.Textbox(lines=20, placeholder="Paste your Python code here...", label="Python Code")
+    file_input = gr.File(label="Upload a Python (.py) file", file_types=[".py"])
+    linted_code_output = gr.Textbox(label="Linted Code", lines=20)
+    lint_report_output = gr.Textbox(label="Linting Report")
+    lint_button = gr.Button("Lint Code")
+    lint_button.click(
+        handle_input,
+        inputs=[code_input, file_input],
+        outputs=[linted_code_output, lint_report_output],
+    )
 
 # Launch the interface
-interface.launch()
+if __name__ == "__main__":
+    interface.launch()
