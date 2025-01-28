@@ -3,3 +3,4 @@ huggingface_hub
 flake8
 transformers
 datasets
+autopep8
