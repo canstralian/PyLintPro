@@ -2,6 +2,7 @@ import gradio as gr
 from flake8.api import legacy as flake8
 import autopep8
 
+# Lint code function that uses Flake8 and autopep8
 def lint_code(code: str) -> tuple[str, str]:
     """
     Lint the provided Python code using Flake8 and auto-fix it with autopep8.
@@ -9,7 +10,12 @@ def lint_code(code: str) -> tuple[str, str]:
     """
     # Run Flake8 for linting, ignoring line-length violations (E501)
     style_guide = flake8.get_style_guide(ignore=["E501"])
-    report = style_guide.check_files(None, lines=code.splitlines())
+    
+    # Using a string IO to simulate a file for flake8 (since flake8 expects file paths)
+    from io import StringIO
+    code_file = StringIO(code)
+    
+    report = style_guide.check_files([code_file])
     
     # Auto-fix the code with autopep8
     fixed_code = autopep8.fix_code(code)
@@ -19,6 +25,7 @@ def lint_code(code: str) -> tuple[str, str]:
     
     return fixed_code, lint_report
 
+# Process the uploaded file (read, decode, and lint it)
 def process_file(file) -> tuple[str, str]:
     """
     Process the uploaded file, decode its content, and lint it.
@@ -30,6 +37,7 @@ def process_file(file) -> tuple[str, str]:
     # Lint the code and get the report
     return lint_code(code)
 
+# Handle input, whether code is pasted or a file is uploaded
 def handle_input(code: str, file) -> tuple[str, str]:
     """
     Handle both code inputs: either text or file.
