@@ -1,3 +1,13 @@
+---
+license: apache-2.0
+title: PyLintPro
+sdk: gradio
+emoji: 👁
+colorFrom: green
+colorTo: yellow
+short_description: A Gradio-based web application
+---
+
 # PyLintPro
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)

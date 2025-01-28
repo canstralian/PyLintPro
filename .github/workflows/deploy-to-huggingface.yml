@@ -1,0 +1,33 @@
+name: Deploy to Hugging Face
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository (this is already included in backendcloud/hugging-push)
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      # Deploy to Hugging Face
+      - name: Hugging Push
+        uses: backendcloud/hugging-push@v0.2.3
+        with:
+          # Hugging Face repo ID (optional, defaults to GitHub repo name)
+          huggingface_repo: 'Canstralian/PyLintPro'
+
+          # Hugging Face token from GitHub secrets (ensure it's set in your repository's secrets)
+          hf_token: ${{ secrets.HF_TOKEN }}
+
+          # The type of repo you're syncing to: space (since you're using Gradio)
+          repo_type: 'space'
+
+          # Make the space public (private is set to false)
+          private: false
+
+          # Specify the SDK to use (Gradio in this case)
+          space_sdk: 'gradio'
