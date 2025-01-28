@@ -1,4 +1,4 @@
-name: PyLintPro CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
@@ -9,45 +9,43 @@ on:
       - main
 
 jobs:
-  lint-and-test:
+  lint-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Set up Python environment
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
-    # Step 3: Install dependencies
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install flake8
+        pip install gradio autopep8 flake8
 
-    # Step 4: Verify Python and installed packages
-    - name: Verify Python and installed packages
-      run: |
-        python --version
-        pip list
-
-    # Step 5: Run Flake8 linting checks
-    - name: Run Flake8
+    - name: Run Flake8 Linting
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
 
-    # Step 6: Run Gradio app unit tests
-    - name: Test Gradio app
+    - name: Run Unit Tests
       run: |
         python -m unittest discover -s tests
 
-    # Step 7: Cache dependencies to speed up workflows
+    - name: Deploy to Hugging Face Space
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        pip install huggingface_hub
+        git remote set-url origin https://huggingface.co/spaces/Canstralian/PyLintPro
+        git add .
+        git commit -m "Deploy to Hugging Face"
+        git push
+
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
@@ -55,22 +53,3 @@ jobs:
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: lint-and-test
-
-    steps:
-    # Step 1: Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    # Step 2: Deploy to Hugging Face Spaces
-    - name: Deploy to Hugging Face Spaces
-      env:
-        HF_USERNAME: ${{ secrets.HF_USERNAME }}
-        HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      run: |
-        pip install huggingface_hub
-        huggingface-cli login --token $HF_TOKEN
-        huggingface-cli repo push Canstralian/PyLintPro --commit-message "CI deployment for PyLintPro"
