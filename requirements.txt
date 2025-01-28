@@ -1,6 +1,10 @@
-gradio
-huggingface_hub
-flake8
-transformers
-datasets
-autopep8
+fastapi==0.95.2
+uvicorn==0.22.0
+transformers==4.30.0
+torch==2.1.0
+pydantic==1.10.10
+gradio==3.32.0
+datasets==2.13.1
+huggingface_hub==0.16.4
+flake8==6.0.0
+autopep8==2.0.2
