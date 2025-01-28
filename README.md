@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 license: apache-2.0
 title: PyLintPro
@@ -166,3 +167,7 @@ For more information, contact us at support@pylintpro.com.
 Footer
 
 PyLintPro is powered by Flake8 and autopep8, designed to enhance Python code quality with minimal effort.
+=======
+# PyLintPro
+A Gradio app that helps users improve Python code to meet Flake8 and PEP 8 standards. Paste code or upload a .py file, and the app returns a linted version along with a detailed report of fixes. Simple, efficient, and perfect for developers seeking clean, compliant code.
+>>>>>>> 4882d89 (Initial commit)
