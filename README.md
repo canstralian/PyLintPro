@@ -1,3 +1,5 @@
+Here’s the full README.md for your project:
+
 # PyLintPro
 
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
@@ -157,75 +159,4 @@ Footer
 
 PyLintPro is powered by Flake8 and autopep8, designed to enhance Python code quality with minimal effort.
 
-### GitHub Actions CI Configuration (`ci-cd.yml`)
-
-```yaml
-name: CI Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run Flake8 Linting
-        run: |
-          flake8 . --max-line-length=79
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run Tests
-        run: |
-          pytest --maxfail=1 --disable-warnings -q
-
-Explanation of the CI Configuration:
-	1.	lint Job:
-      •   Runs flake8 to ensure the code follows PEP 8 and Flake8 rules.
-      •   If there are linting issues, the job will fail.
-	2.	test Job:
-      •   Installs dependencies and runs tests using pytest. If tests fail, the job will fail.
-	3.	Badges:
-      •   CI Status Badge: Automatically reflects the status of the CI pipeline based on the latest push or pull request.
-
-Hugging Face Deployment:
-
-To deploy to Hugging Face and reflect successful deployment, you can add a badge from Hugging Face like this:
-
-[![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/PyLintPro)
-
-This badge will indicate whether your Hugging Face space is up and running.
-
-With this setup, your project will be automated to push updates from GitHub to Hugging Face, show CI status, and allow for easy integration of linting and testing.
+This `README.md` provides a comprehensive guide to the project, its features, usage, installation instructions, and contribution guidelines. It includes badges for tracking the project's status and integrates with your CI/CD pipeline and Hugging Face deployment.
