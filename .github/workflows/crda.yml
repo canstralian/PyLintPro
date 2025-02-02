@@ -4,7 +4,7 @@ on:
   workflow_call:
     secrets:
       CRDA_KEY:
-        required: false
+        required: true
       SNYK_TOKEN:
         required: false
   workflow_dispatch:
@@ -46,5 +46,3 @@ jobs:
         uses: redhat-actions/crda@v1
         with:
           crda_key: ${{ secrets.CRDA_KEY }}
-          # snyk_token: ${{ secrets.SNYK_TOKEN }}
-          # upload_artifact: false
