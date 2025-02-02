@@ -6,6 +6,7 @@ emoji: 👁
 colorFrom: green
 colorTo: yellow
 short_description: A Gradio-based web application
+sdk_version: 5.14.0
 ---
 
 # PyLintPro
@@ -13,11 +14,10 @@ short_description: A Gradio-based web application
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
 ![Flake8](https://img.shields.io/badge/Flake8-%E2%9C%94-green.svg)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/pylint)
 ![Issues](https://img.shields.io/github/issues/canstralian/PyLintPro)
 [![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/PyLintPro)
 
-PyLintPro is a Gradio-based web application designed to help developers improve Python code by making it adhere to [Flake8](https://flake8.pycqa.org/) and [PEP 8](https://pep8.org/) standards.
+PyLintPro is a Gradio-based web application designed to help developers improve Python code by making it adhere to [Flake8](https://flake8.pycqa.org/) and [PEP 8](https://pep8.org/) standards. Simply paste your code or upload a `.py` file, and PyLintPro will return a linted version along with a detailed report of fixes. Whether you're working on personal projects or professional codebases, PyLintPro streamlines the process of cleaning and optimizing your Python code.
 
 ## Features
 
@@ -93,7 +93,7 @@ Here's an example of how to use the app:
         print('Hello World')
     ```
 
-    **Linting Report**:
+   **Linting Report**:
     - `E701`: Multiple statements on one line.
     - `W292`: No newline at end of file.
 
@@ -140,11 +140,29 @@ PyLintPro is licensed under the MIT License. See the [LICENSE](LICENSE) file for
 - [Flake8](https://flake8.pycqa.org/): Linting tool used to check code against PEP 8.
 - [autopep8](https://github.com/hhatto/autopep8): Used to auto-correct PEP 8 violations.
 
-## Known Issues
+---
 
-- **File Upload Limit**: Currently, the maximum file size for uploads is 10 MB.
-- **Performance on Large Files**: The app may take longer to process large files or files with many lines of code.
+### Example Code Snippet for Reference
 
-## Contact
+Here’s an example Python code snippet that can be used with PyLintPro:
+
+```python
+import sys
+
+def hello_world():
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    hello_world()
+
+Known Issues
+   •   File Upload Limit: Currently, the maximum file size for uploads is 10 MB.
+   •   Performance on Large Files: The app may take longer to process large files or files with many lines of code.
+
+Contact
 
 For more information, contact us at support@pylintpro.com.
+
+Footer
+
+PyLintPro is powered by Flake8 and autopep8, designed to enhance Python code quality with minimal effort.
