@@ -174,3 +174,4 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 >>>>>>> 4882d89 (Initial commit)
+.venv/
