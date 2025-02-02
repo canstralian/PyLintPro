@@ -12,9 +12,21 @@ def scale_features(df):
     df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
     return df
 
-def create_polynomial_features(df, degree=2):
-    """Create polynomial features."""
-    numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
+def create_polynomial_features(df, degree=2, selected_columns=None):
+    """Create polynomial features.
+
+    Args:
+        df: Input DataFrame
+        degree: Degree of polynomial features (default: 2)
+        selected_columns: List of column names to use for polynomial features. 
+                         If None, uses all numerical columns (default: None)
+    """
+    if selected_columns is not None:
+        numerical_cols = [col for col in selected_columns if col in df.columns]
+        if not numerical_cols:
+            raise ValueError("None of the selected columns found in DataFrame")
+    else:
+        numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
     poly = PolynomialFeatures(degree=degree, include_bias=False)
     poly_features = poly.fit_transform(df[numerical_cols])
     poly_feature_names = poly.get_feature_names_out(numerical_cols)
