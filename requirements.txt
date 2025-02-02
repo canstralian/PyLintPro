@@ -5,6 +5,6 @@ torch==2.2.0
 pydantic==1.10.13
 gradio==5.11.0
 datasets==2.13.1
-huggingface_hub==0.16.4
+huggingface_hub
 flake8==6.0.0
 autopep8==2.0.2
