@@ -148,7 +148,3 @@ PyLintPro is licensed under the MIT License. See the [LICENSE](LICENSE) file for
 ## Contact
 
 For more information, contact us at support@pylintpro.com.
-
-## Footer
-
-PyLintPro is powered by Flake8 and autopep8, designed to enhance Python code quality with minimal effort.
