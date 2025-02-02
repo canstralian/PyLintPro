@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ---
 license: apache-2.0
 title: PyLintPro
