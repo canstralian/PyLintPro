@@ -11,17 +11,17 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
         ref: ${{ github.sha }}  # Pin to specific commit
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
     - name: Cache pip
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -33,12 +33,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Authenticate with Huggingface
-      run: huggingface-cli login --token ${{ secrets.HF_TOKEN }}
+    - name: Authenticate with Hugging Face
+      uses: huggingface-login@v1
+      with:
+        hf_token: ${{ secrets.HF_TOKEN }}
 
-    - name: Deploy to Huggingface
+    - name: Deploy to Hugging Face
       run: |
-        huggingface-cli repo create my-streamlit-app --type=space --private
-        huggingface-cli repo upload --repo-id Canstralian/PyLintPro app.py requirements.txt
-        huggingface-cli space hardware --repo-id Canstralian/PyLintPro-app --hardware cpu-basic
+        git remote add hf https://huggingface.co/spaces/Canstralian/PyLintPro
+        git push hf main
       continue-on-error: true  # Allow workflow to continue even if deployment fails
