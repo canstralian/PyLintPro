@@ -1,0 +1,47 @@
+name: Huggingface Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push code to Hugging Face
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Authenticate with Hugging Face
+        uses: huggingface-login@v1
+        with:
+          hf_token: ${{ secrets.HF_TOKEN }}
+
+      - name: Deploy to Hugging Face
+        run: |
+          git remote add hf https://huggingface.co/spaces/Canstralian/PyLintPro
+          git push hf main
+        continue-on-error: true
