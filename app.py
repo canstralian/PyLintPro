@@ -28,10 +28,10 @@ def lint_code(code):
     # Run Flake8 for linting
     style_guide = flake8.get_style_guide(ignore=["E501"])  # Ignore line-length violations
     report = style_guide.check_files(None, lines=code.splitlines())
-    
+
     # Auto-fix with autopep8
     fixed_code = autopep8.fix_code(code)
-    return fixed_code, "\n".join(msg for msg in report.get_statistics())
+    return fixed_code, "\n".join(report.get_statistics())
 
 def process_file(file):
     # Read file contents
