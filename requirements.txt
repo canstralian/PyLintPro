@@ -1,6 +1,6 @@
 fastapi
 uvicorn==0.22.0
-transformers==4.38.0
+transformers==4.48.0
 torch==2.2.0
 pydantic>=2.0
 gradio
