@@ -1,29 +1,56 @@
-### Description:
-Please provide a brief summary of your changes and the reason for the addition or modification.
+<!-- Pull Request Template for PyLintPro -->
 
-### Why is this change necessary?
-Please explain why this addition, change, or fix is necessary to the project. Is it solving a bug, adding a new feature, improving documentation, etc.?
+# PyLintPro Contribution
 
-### Related Issues (if applicable):
-- Issue # (Provide a link to the relevant issue(s), if applicable)
+Thank you for contributing to PyLintPro! Please complete the checklist below to help us review your PR faster.
 
-### Categories (select all that apply):
-- [ ] Tools
-- [ ] Techniques
-- [ ] Tutorials
-- [ ] Vulnerabilities
-- [ ] Challenges
-- [ ] Research
-- [ ] Miscellaneous
+---
 
-### Resource Details:
-Provide any additional context or references for the resource (e.g., a link to a blog post, tool, research paper, etc.).
+## 1. Overview
 
-### Testing:
-If applicable, have you tested this change? If so, provide details of how the changes were validated.
+- **Summary of Changes**:  
+  _Briefly describe what you changed or added._
 
-### Checklist:
-- [ ] I have reviewed the guidelines and contribution rules.
-- [ ] This pull request is focused on a single change or issue.
-- [ ] All necessary documentation has been updated.
-- [ ] I have provided enough details in the PR description.
+- **Reason for Addition or Change**:  
+  _Explain why this change improves PyLintPro (e.g., bug fix, new feature, UI improvement, performance enhancement)._
+
+---
+
+## 2. Cybersecurity Relevance
+
+- [ ] Does this PR enhance security (e.g., safer input validation, better code quality)?
+- [ ] If applicable, describe how it aligns with Python, PEP 8, or secure coding best practices.
+
+---
+
+## 3. Quality Assurance
+
+- [ ] My code follows PEP 8 and passes Flake8 checks.
+- [ ] I have tested the app locally (`python app.py`) and validated no crashes or critical bugs occur.
+- [ ] New features are documented in the README if necessary.
+
+---
+
+## 4. Categorization
+
+- [ ] Bug Fix
+- [ ] Feature Addition
+- [ ] UI/UX Improvement
+- [ ] Refactor / Code Cleanup
+- [ ] Documentation Update
+- [ ] Other (please specify)
+
+---
+
+## 5. Additional Context
+
+- _Optional: Screenshots, links to related issues, examples, or explanations._
+
+---
+
+## 6. Contributor Challenge Submission (Optional)
+
+- [ ] This PR is part of a **PyLintPro Challenge**.
+- _Challenge Name:_ **(e.g., Lint Master, Docstring Prodigy, Upload Guru)_
+
+Earn badges and rise on the leaderboard!
