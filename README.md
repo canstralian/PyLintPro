@@ -30,6 +30,43 @@ PyLintPro is a Gradio-based web application designed to help developers improve 
 - **Linting Reports**: Get a detailed report on your code’s style issues, including statistics on what was fixed and what still needs attention.
 - **Minimalist, User-friendly Interface**: Powered by Gradio, with a clean and intuitive interface that’s easy to navigate.
 
+## Gamification and Contributor Recognition
+
+We believe open-source should be fun and rewarding!  
+At PyLintPro, contributors can earn points, badges, and leaderboard spots by improving the project.
+
+### How to Earn Points
+
+| Action | Points |
+|:------|:-------|
+| Fix a Bug | 10 |
+| Add a New Feature | 20 |
+| Improve Documentation | 5 |
+| Complete a Challenge | 15–30 |
+| Review and Approve PRs | 8 |
+
+### Contributor Badges
+
+- ![Badge](https://img.shields.io/badge/Badge-Bug%20Fixer-green) **Bug Fixer** — Fix at least 3 bugs.
+- ![Badge](https://img.shields.io/badge/Badge-Docstring%20Prodigy-blue) **Docstring Prodigy** — Improve docstrings in 5+ functions/classes.
+- ![Badge](https://img.shields.io/badge/Badge-Lint%20Master-purple) **Lint Master** — Submit a PR that scores 100% PEP 8 compliance.
+
+Badges will appear on your GitHub profile through custom Shields.io badges!
+
+### Community Challenges
+
+We host regular contributor challenges:
+
+- **Challenge: "Perfect Lint"** — Submit a Python script that passes Flake8 and autopep8 with zero warnings.
+- **Challenge: "Docstring Improvement"** — Improve 10 docstrings across various files.
+- **Challenge: "Bug Slayer"** — Find and fix critical issues affecting uploads, linting, or formatting.
+
+Stay tuned on the [Discussions](https://github.com/canstralian/PyLintPro/discussions) page for announcements!
+
+---
+
+Contribute, improve your skills, and earn your place on the PyLintPro Hall of Fame!
+
 ## Getting Started
 
 ### Prerequisites
