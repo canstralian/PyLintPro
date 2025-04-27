@@ -1,47 +1,69 @@
+#!/usr/bin/env python3
+# data/data_processing.py
+
+"""
+Data Processing for PyLintPro
+
+Scales numeric features and generates polynomial interaction terms via
+a unified sklearn Pipeline, with a CLI interface via Click.
+"""
+
+import logging
+from pathlib import Path
+from typing import Optional, List, Union
+
+import click
 import pandas as pd
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 
-def load_data(file_path):
-    """Load dataset from a CSV file."""
-    return pd.read_csv(file_path)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+logger = logging.getLogger(__name__)
 
-def scale_features(df):
-    """Scale numerical features using StandardScaler."""
-    numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
-    scaler = StandardScaler()
-    df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+def load_data(file_path: Union[str, Path]) -> pd.DataFrame:
+    """Read CSV into DataFrame."""
+    file_path = Path(file_path)
+    logger.info("Loading data from %s", file_path)
+    df = pd.read_csv(file_path)  # pandas.read_csv 
+    logger.info("Data shape: %s", df.shape)
     return df
 
-def create_polynomial_features(df, degree=2, selected_columns=None):
-    """Create polynomial features.
+@click.command()
+@click.option("--input-file", "-i", type=click.Path(exists=True), required=True,
+              help="Path to input CSV file")
+@click.option("--output-file", "-o", type=click.Path(), required=True,
+              help="Path for output CSV file")
+@click.option("--degree", "-d", default=2, show_default=True,
+              help="Degree of polynomial features to generate")
+@click.option("--columns", "-c", multiple=True,
+              help="Explicit list of columns to include; defaults to all numeric")
+def main(input_file: str, output_file: str, degree: int, columns: List[str]):
+    """CLI entry point for data processing."""
+    df = load_data(input_file)
+    numeric_cols = list(columns) if columns else df.select_dtypes(
+        include=["int64", "float64"]
+    ).columns.tolist()
+    logger.info("Preparing pipeline for columns: %s", numeric_cols)
 
-    Args:
-        df: Input DataFrame
-        degree: Degree of polynomial features (default: 2)
-        selected_columns: List of column names to use for polynomial features. 
-                         If None, uses all numerical columns (default: None)
-    """
-    if selected_columns is not None:
-        numerical_cols = [col for col in selected_columns if col in df.columns]
-        if not numerical_cols:
-            raise ValueError("None of the selected columns found in DataFrame")
-    else:
-        numerical_cols = df.select_dtypes(include=['float64', 'int64']).columns
-    poly = PolynomialFeatures(degree=degree, include_bias=False)
-    poly_features = poly.fit_transform(df[numerical_cols])
-    poly_feature_names = poly.get_feature_names_out(numerical_cols)
-    poly_df = pd.DataFrame(poly_features, columns=poly_feature_names)
-    df = df.join(poly_df)
-    return df
+    pipeline = Pipeline([
+        ("scaler", StandardScaler()),            # sklearn.preprocessing.StandardScaler 
+        ("poly", PolynomialFeatures(
+            degree=degree, include_bias=False
+        ))                                      # sklearn.preprocessing.PolynomialFeatures 
+    ])
 
-def process_data(file_path):
-    """Load, process, and return the dataset."""
-    df = load_data(file_path)
-    df = scale_features(df)
-    df = create_polynomial_features(df)
-    return df
+    # Fit-transform only the selected columns
+    arr = pipeline.fit_transform(df[numeric_cols])
+    feature_names = pipeline.named_steps["poly"].get_feature_names_out(numeric_cols)  #  [oai_citation_attribution:6‡Scikit-learn](https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html?utm_source=chatgpt.com)
+
+    df_poly = pd.DataFrame(arr, columns=feature_names, index=df.index)
+    result_df = df.join(df_poly)
+    result_df.to_csv(output_file, index=False)
+    logger.info("Saved processed data with polynomial features to %s", output_file)
 
 if __name__ == "__main__":
-    file_path = 'path_to_your_data.csv'  # Replace with your actual file path
-    processed_data = process_data(file_path)
-    processed_data.to_csv('processed_data_with_features.csv', index=False)
+    main()
