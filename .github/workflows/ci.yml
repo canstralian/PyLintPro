@@ -8,58 +8,72 @@ on:
     branches:
       - main
 
+# Cancel any in-progress runs on the same branch to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint-and-test:
-    runs-on: ubuntu-latest
+    # Matrix across OSes and Python versions
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.8', '3.9', '3.10']
 
     steps:
-      # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v4
 
-      # Set up Python environment with a specific version
-      - name: Set up Python
-        uses: actions/setup-python@v4.0.0
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
 
-      # Install dependencies (combine into a single step)
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt flake8
+          pip install --upgrade pip
+          pip install -r requirements.txt
 
-      # Lint code with Flake8
-      - name: Run Flake8
+      - name: Run Flake8 (strict then permissive)
         run: |
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || exit 1
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
 
-      # Run Gradio interface test
-      - name: Test Gradio app
+      - name: Run tests & generate coverage
         run: |
-          python -m unittest discover -s tests
+          pytest --maxfail=1 --disable-warnings --cov=./ --cov-report=xml
 
-      # (Optional) Cache dependencies
-      - name: Cache dependencies
-        uses: actions/cache@v3
+      - name: Code Coverage Summary
+        uses: irongut/CodeCoverageSummary@v1
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          filename: 'coverage.xml'
+          badge: true
+          format: 'markdown'
+          output: 'both'
+
+      - name: Append coverage summary to job summary
+        if: always()
+        run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
   deploy:
-    runs-on: ubuntu-latest
     needs: lint-and-test
-
+    runs-on: ubuntu-latest
     steps:
-      # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v4
 
-      # Add your deployment steps here (e.g., deploy to AWS, Heroku, etc.)
       - name: Deploy to Cloud (example)
         run: |
           echo "Deploying application..."
-          # Add your deployment command here, such as for AWS, GCP, or any other platform
+
+      - name: Notify Slack
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_CHANNEL: production
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: 'CI Pipeline completed with status ${{ job.status }}'
