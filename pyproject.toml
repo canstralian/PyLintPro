@@ -56,3 +56,8 @@ testpaths = [
 python_version = 3.8
 ignore_missing_imports = true
 strict = true
+
+[tool.debug]
+# Debug-related environment variables or settings
+debug = true
+log_level = "DEBUG"

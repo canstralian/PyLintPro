@@ -57,11 +57,15 @@ def main():
         "--disable_progress", action="store_true",
         help="Disable the progress bar (useful for CI or non-interactive runs)"
     )
+    parser.add_argument(
+        "--debug", action="store_true",
+        help="Enable debug logging"
+    )
     args = parser.parse_args()
 
     # Set up logging
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG if args.debug else logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s"
     )
     set_progress_bar_enabled(not args.disable_progress)

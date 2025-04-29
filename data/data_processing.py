@@ -19,7 +19,7 @@ from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
 logger = logging.getLogger(__name__)
@@ -41,8 +41,12 @@ def load_data(file_path: Union[str, Path]) -> pd.DataFrame:
               help="Degree of polynomial features to generate")
 @click.option("--columns", "-c", multiple=True,
               help="Explicit list of columns to include; defaults to all numeric")
-def main(input_file: str, output_file: str, degree: int, columns: List[str]):
+@click.option("--debug", is_flag=True, default=False,
+              help="Enable debug logging")
+def main(input_file: str, output_file: str, degree: int, columns: List[str], debug: bool):
     """CLI entry point for data processing."""
+    if debug:
+        logger.setLevel(logging.DEBUG)
     df = load_data(input_file)
     numeric_cols = list(columns) if columns else df.select_dtypes(
         include=["int64", "float64"]

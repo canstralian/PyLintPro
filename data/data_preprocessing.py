@@ -21,7 +21,7 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
 logger = logging.getLogger(__name__)
@@ -103,8 +103,12 @@ def preprocess_data(
               help="Imputation strategy for categorical (most_frequent|constant)")
 @click.option("--encoding", type=click.Choice(["onehot", "ordinal"]), default="onehot",
               help="Encoding method for categorical features")
-def main(input_file: str, output_file: str, num_strat: str, cat_strat: str, encoding: str):
+@click.option("--debug", is_flag=True, default=False,
+              help="Enable debug logging")
+def main(input_file: str, output_file: str, num_strat: str, cat_strat: str, encoding: str, debug: bool):
     """CLI entry point for data preprocessing."""
+    if debug:
+        logger.setLevel(logging.DEBUG)
     df = load_data(input_file)
     pipeline = build_preprocessing_pipeline(
         numerical_strategy=num_strat,

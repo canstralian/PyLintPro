@@ -22,7 +22,7 @@ from src.utils import parse_flake8_output
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )  # Basic logging setup  [oai_citation_attribution:6‡Python documentation](https://docs.python.org/3/library/logging.html?utm_source=chatgpt.com)
 logger = logging.getLogger("run_backend")
