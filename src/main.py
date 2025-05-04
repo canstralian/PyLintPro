@@ -5,6 +5,9 @@ from src.config import GRADIO_THEME, GRADIO_CSS       # Centralized UI settings
 from src.lint import lint_code                         # Business logic for formatting and linting
 
 def main():
+    """
+    Main function to build and launch the Gradio Blocks application.
+    """
     # Build the Gradio Blocks application
     with gr.Blocks(
         theme=GRADIO_THEME,                            # Apply a prebuilt Soft theme

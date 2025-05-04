@@ -26,6 +26,13 @@ def lint_code(code):
     issues = result.stdout.strip() or "No issues found."
     return f"{formatted_code}\n\n# Flake8 issues:\n{issues}"
 
+def test_lint_code():
+    """
+    Unit test for lint_code function.
+    """
+    code = "print( 'hello world' )"
+    expected_output = "print('hello world')\n\n# Flake8 issues:\nNo issues found."
+    assert lint_code(code) == expected_output
 
 # Iteration 1: Basic layout with two code editors
 with gr.Blocks() as demo:
