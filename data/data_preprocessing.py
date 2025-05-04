@@ -30,9 +30,19 @@ def load_data(file_path: Union[str, Path]) -> pd.DataFrame:
     """Load dataset from a CSV file."""
     file_path = Path(file_path)
     logger.info("Loading data from %s", file_path)
-    df = pd.read_csv(file_path)  # pandas.read_csv 
-    logger.info("Data shape: %s", df.shape)
-    return df
+    try:
+        df = pd.read_csv(file_path)  # pandas.read_csv 
+        logger.info("Data shape: %s", df.shape)
+        return df
+    except FileNotFoundError as e:
+        logger.error("File not found: %s", file_path)
+        raise e
+    except pd.errors.EmptyDataError as e:
+        logger.error("No data: %s", file_path)
+        raise e
+    except Exception as e:
+        logger.error("Error loading data: %s", e)
+        raise e
 
 def build_preprocessing_pipeline(
     numerical_strategy: str = "median",
