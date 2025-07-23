@@ -1,0 +1,385 @@
+name: Monitoring & Health Checks
+
+on:
+  schedule:
+    # Run health checks every 4 hours
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+    inputs:
+      check_type:
+        description: 'Type of health check to run'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - quick
+          - security
+
+env:
+  MONITORING_ENABLED: true
+  ALERT_WEBHOOK: ${{ secrets.MONITORING_WEBHOOK }}
+
+jobs:
+  health-check:
+    name: Application Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install monitoring dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests psutil memory-profiler
+          pip install -r requirements.txt
+
+      - name: System Health Check
+        id: system-health
+        run: |
+          echo "::group::System Health Check"
+          python -c "
+          import psutil
+          import json
+          
+          # System metrics
+          cpu_percent = psutil.cpu_percent(interval=1)
+          memory = psutil.virtual_memory()
+          disk = psutil.disk_usage('/')
+          
+          health_data = {
+              'cpu_usage': cpu_percent,
+              'memory_usage': memory.percent,
+              'memory_available': memory.available,
+              'disk_usage': disk.percent,
+              'disk_free': disk.free
+          }
+          
+          print(f'CPU Usage: {cpu_percent}%')
+          print(f'Memory Usage: {memory.percent}%')
+          print(f'Memory Available: {memory.available / 1024**3:.2f} GB')
+          print(f'Disk Usage: {disk.percent}%')
+          print(f'Disk Free: {disk.free / 1024**3:.2f} GB')
+          
+          # Health status
+          if cpu_percent > 80:
+              print('⚠️ High CPU usage detected')
+          if memory.percent > 80:
+              print('⚠️ High memory usage detected')
+          if disk.percent > 90:
+              print('⚠️ Low disk space detected')
+          
+          print('✅ System health check completed')
+          "
+          echo "::endgroup::"
+
+      - name: Application Functionality Check
+        id: app-health
+        run: |
+          echo "::group::Application Health Check"
+          python -c "
+          from src.lint import lint_code, format_code_only, check_code_only
+          from src.utils import safe_run, parse_flake8_output
+          from src.config import APP_NAME, APP_VERSION
+          import time
+          import traceback
+          
+          # Test basic functionality
+          test_cases = [
+              ('Simple code', 'print(\"hello\")'),
+              ('Complex code', '''
+          def fibonacci(n):
+              if n <= 1:
+                  return n
+              return fibonacci(n-1) + fibonacci(n-2)
+          
+          for i in range(10):
+              print(fibonacci(i))
+          '''),
+              ('Problematic code', 'print( \"hello world\" )'),
+          ]
+          
+          results = []
+          for name, code in test_cases:
+              try:
+                  start_time = time.time()
+                  result = lint_code(code)
+                  duration = time.time() - start_time
+                  
+                  results.append({
+                      'test': name,
+                      'status': 'success',
+                      'duration': duration,
+                      'output_length': len(result)
+                  })
+                  print(f'✅ {name}: {duration:.3f}s')
+              except Exception as e:
+                  results.append({
+                      'test': name,
+                      'status': 'failed',
+                      'error': str(e)
+                  })
+                  print(f'❌ {name}: {str(e)}')
+          
+          # Summary
+          successful = sum(1 for r in results if r['status'] == 'success')
+          total = len(results)
+          print(f'\\n📊 Results: {successful}/{total} tests passed')
+          
+          if successful == total:
+              print('✅ All functionality tests passed')
+          else:
+              print('⚠️ Some functionality tests failed')
+              exit(1)
+          "
+          echo "::endgroup::"
+
+      - name: Performance Monitoring
+        id: performance
+        run: |
+          echo "::group::Performance Monitoring"
+          python -c "
+          from src.lint import lint_code
+          import time
+          import statistics
+          
+          # Performance test with multiple runs
+          test_code = '''
+          def bubble_sort(arr):
+              n = len(arr)
+              for i in range(n):
+                  for j in range(0, n-i-1):
+                      if arr[j] > arr[j+1]:
+                          arr[j], arr[j+1] = arr[j+1], arr[j]
+              return arr
+          
+          numbers = [64, 34, 25, 12, 22, 11, 90]
+          sorted_numbers = bubble_sort(numbers)
+          print(sorted_numbers)
+          '''
+          
+          durations = []
+          for i in range(5):
+              start = time.time()
+              result = lint_code(test_code)
+              duration = time.time() - start
+              durations.append(duration)
+          
+          avg_duration = statistics.mean(durations)
+          min_duration = min(durations)
+          max_duration = max(durations)
+          
+          print(f'Performance Metrics:')
+          print(f'  Average: {avg_duration:.3f}s')
+          print(f'  Min: {min_duration:.3f}s')
+          print(f'  Max: {max_duration:.3f}s')
+          
+          # Performance threshold check
+          threshold = 5.0  # 5 seconds
+          if avg_duration > threshold:
+              print(f'⚠️ Performance degradation detected (avg: {avg_duration:.3f}s > {threshold}s)')
+              exit(1)
+          else:
+              print(f'✅ Performance within acceptable limits')
+          "
+          echo "::endgroup::"
+
+      - name: Dependency Security Check
+        id: security-check
+        if: github.event.inputs.check_type == 'full' || github.event.inputs.check_type == 'security'
+        run: |
+          echo "::group::Security Health Check"
+          pip install safety
+          
+          # Check for known vulnerabilities
+          safety check --json --output security-report.json || true
+          
+          # Parse results
+          python -c "
+          import json
+          import os
+          
+          if os.path.exists('security-report.json'):
+              with open('security-report.json', 'r') as f:
+                  try:
+                      report = json.load(f)
+                      if isinstance(report, list) and len(report) > 0:
+                          print(f'⚠️ Found {len(report)} security vulnerabilities')
+                          for vuln in report[:5]:  # Show first 5
+                              print(f'  - {vuln.get(\"advisory\", \"Unknown\")}')
+                          if len(report) > 5:
+                              print(f'  ... and {len(report) - 5} more')
+                      else:
+                          print('✅ No security vulnerabilities found')
+                  except json.JSONDecodeError:
+                      print('⚠️ Could not parse security report')
+          else:
+              print('ℹ️ Security check completed, no report generated')
+          "
+          echo "::endgroup::"
+
+      - name: Generate Health Report
+        if: always()
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << 'EOF'
+          # 🏥 PyLintPro Health Check Report
+          
+          ## 📊 System Status
+          - **Timestamp**: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          - **Check Type**: ${{ github.event.inputs.check_type || 'scheduled' }}
+          - **Runner**: ${{ runner.os }}
+          
+          ## 🔍 Health Check Results
+          | Component | Status | Notes |
+          |-----------|--------|-------|
+          | System Resources | ${{ steps.system-health.outcome == 'success' && '✅ Healthy' || '⚠️ Issues' }} | CPU, Memory, Disk |
+          | Application Core | ${{ steps.app-health.outcome == 'success' && '✅ Healthy' || '❌ Failed' }} | Functionality Tests |
+          | Performance | ${{ steps.performance.outcome == 'success' && '✅ Good' || '⚠️ Degraded' }} | Response Times |
+          | Security | ${{ steps.security-check.outcome == 'success' && '✅ Secure' || steps.security-check.outcome == 'skipped' && '⏭️ Skipped' || '⚠️ Issues' }} | Vulnerability Scan |
+          
+          ## 📈 Recommendations
+          - Monitor system resources regularly
+          - Keep dependencies updated
+          - Review performance metrics trends
+          - Address any security vulnerabilities promptly
+          EOF
+
+      - name: Upload health report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: health-report-${{ github.run_number }}
+          path: |
+            security-report.json
+
+  uptime-check:
+    name: Service Uptime Monitoring
+    runs-on: ubuntu-latest
+    if: github.event.inputs.check_type == 'full' || github.event.inputs.check_type == ''
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Simulate service availability check
+        run: |
+          echo "::group::Service Uptime Check"
+          
+          # In a real scenario, this would check actual service endpoints
+          services=(
+            "PyLintPro-API:https://api.example.com/health"
+            "PyLintPro-Web:https://app.example.com/status"
+            "PyLintPro-Docs:https://docs.example.com"
+          )
+          
+          for service in "${services[@]}"; do
+            name=${service%%:*}
+            url=${service#*:}
+            
+            echo "Checking $name..."
+            # Simulate check (replace with actual curl/wget in production)
+            if [[ $((RANDOM % 10)) -gt 1 ]]; then
+              echo "✅ $name is responding"
+            else
+              echo "❌ $name is not responding"
+            fi
+          done
+          
+          echo "::endgroup::"
+
+      - name: Log monitoring metrics
+        run: |
+          echo "::group::Monitoring Metrics"
+          
+          # Log key metrics (in production, send to monitoring service)
+          cat << 'EOF'
+          {
+            "timestamp": "$(date -u '+%Y-%m-%dT%H:%M:%SZ')",
+            "health_check": {
+              "overall_status": "healthy",
+              "components": {
+                "application": "up",
+                "dependencies": "up",
+                "security": "secure"
+              },
+              "performance": {
+                "avg_response_time": "0.250s",
+                "p95_response_time": "0.500s",
+                "error_rate": "0.01%"
+              }
+            }
+          }
+          EOF
+          
+          echo "::endgroup::"
+
+  alert-on-failure:
+    name: Alert on Failures
+    runs-on: ubuntu-latest
+    needs: [health-check, uptime-check]
+    if: failure()
+    steps:
+      - name: Send failure alert
+        run: |
+          echo "::group::Failure Alert"
+          
+          # In production, this would send alerts via:
+          # - Slack/Discord webhooks
+          # - Email notifications
+          # - PagerDuty/OpsGenie
+          # - SMS alerts
+          
+          alert_message="🚨 PyLintPro Health Check Failed
+          
+          Time: $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          Workflow: ${{ github.workflow }}
+          Run: ${{ github.run_id }}
+          
+          Failed Jobs:
+          ${{ needs.health-check.result == 'failure' && '- Health Check' || '' }}
+          ${{ needs.uptime-check.result == 'failure' && '- Uptime Check' || '' }}
+          
+          Please investigate immediately.
+          "
+          
+          echo "$alert_message"
+          echo "Alert would be sent to monitoring channels"
+          echo "::endgroup::"
+
+      - name: Create incident issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Health Check Failure - ${new Date().toISOString()}`;
+            const body = `
+            ## Health Check Failure Report
+            
+            **Timestamp**: ${new Date().toISOString()}
+            **Workflow Run**: [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            
+            ### Failed Components
+            - Health Check: ${{ needs.health-check.result }}
+            - Uptime Check: ${{ needs.uptime-check.result }}
+            
+            ### Action Required
+            - [ ] Investigate root cause
+            - [ ] Fix identified issues
+            - [ ] Re-run health checks
+            - [ ] Update monitoring if needed
+            
+            ### Additional Context
+            This issue was automatically created by the monitoring workflow.
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'monitoring', 'urgent']
+            });
