@@ -2,7 +2,8 @@
 
 """
 PyLintPro
-A Gradio application to lint and format Python code according to PEP 8 and Flake8 standards.
+A Gradio application to lint and format Python code according to PEP 8
+and Flake8 standards.
 """
 
 __version__ = "1.0.0"
