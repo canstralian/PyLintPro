@@ -14,6 +14,9 @@ sdk_version: 5.14.0
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
 ![Flake8](https://img.shields.io/badge/Flake8-%E2%9C%94-green.svg)
+![Tests](https://img.shields.io/badge/Tests-102%20passed-brightgreen.svg)
+![Coverage](https://img.shields.io/badge/Coverage-91%25-brightgreen.svg)
+![CI](https://img.shields.io/badge/CI-Multi--OS%20%7C%20Multi--Python-blue.svg)
 ![Issues](https://img.shields.io/github/issues/canstralian/PyLintPro)
 [![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/PyLintPro)
 
@@ -34,6 +37,8 @@ Paste code or upload `.py` files — PyLintPro instantly formats your code, dete
 - [Usage](#-usage)
   - [Web Interface](#web-interface)
   - [CLI Usage](#cli-usage)
+- [Testing & Quality](#-testing--quality)
+- [CI/CD Pipeline](#-cicd-pipeline)
 - [Advanced Options](#-advanced-options)
 - [Deployment](#-deployment)
 - [Roadmap](#-roadmap)
