@@ -20,6 +20,12 @@ from .config import (
     GRADIO_CSS,
 )
 from .lint import lint_code
+from .ccxtpro_streamer import (
+    ccxtpro_streamer,
+    StreamerConfig,
+    get_streamer_info,
+    create_multi_stream_handler,
+)
 from .utils import (
     safe_run,
     parse_flake8_output,
@@ -31,6 +37,10 @@ from .utils import (
 
 __all__ = [
     "lint_code",
+    "ccxtpro_streamer",
+    "StreamerConfig",
+    "get_streamer_info",
+    "create_multi_stream_handler",
     "safe_run",
     "parse_flake8_output",
     "format_issues_for_display",
