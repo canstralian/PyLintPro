@@ -19,7 +19,6 @@ from .config import (
     GRADIO_THEME,
     GRADIO_CSS,
 )
-from .lint import lint_code
 from .utils import (
     safe_run,
     parse_flake8_output,
@@ -30,7 +29,6 @@ from .utils import (
 )
 
 __all__ = [
-    "lint_code",
     "safe_run",
     "parse_flake8_output",
     "format_issues_for_display",
