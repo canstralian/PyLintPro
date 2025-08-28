@@ -20,6 +20,14 @@ import uvicorn
 from src.lint import lint_code
 from src.utils import parse_flake8_output
 
+# Import agent components
+try:
+    from src.agents.api import AgentRegistry, AgentRequest, AgentResponse
+    AGENTS_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Agent framework not available: {e}")
+    AGENTS_AVAILABLE = False
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -48,7 +56,7 @@ class LintResponse(BaseModel):
 # FastAPI application instance
 app = FastAPI(
     title="PyLintPro Backend API",
-    description="API for linting and formatting Python code",
+    description="API for linting and formatting Python code with Claude agent support",
     version="1.0.0"
 )  # FastAPI setup  [oai_citation_attribution:7‡FastAPI](https://fastapi.tiangolo.com/?utm_source=chatgpt.com)
 
@@ -56,7 +64,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_methods=["POST", "OPTIONS"],
+    allow_methods=["POST", "GET", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -86,6 +94,103 @@ def lint_endpoint(request: LintRequest):
         logger.error("Error during linting: %s", e, exc_info=True)
         # Return a 500 error on failure  [oai_citation_attribution:10‡FastAPI](https://fastapi.tiangolo.com/tutorial/handling-errors/?utm_source=chatgpt.com)
         raise HTTPException(status_code=500, detail="Internal linting error")
+
+
+# Agent endpoints (if available)
+if AGENTS_AVAILABLE:
+    @app.get("/agents")
+    def list_agents():
+        """
+        List available Claude agents.
+        """
+        return {
+            "agents": AgentRegistry.get_available_agents(),
+            "status": "Available"
+        }
+    
+    @app.post("/agents/{agent_type}", response_model=AgentResponse)
+    def run_agent(agent_type: str, request: AgentRequest):
+        """
+        Run a specific Claude agent.
+        """
+        logger.info("Running agent %s with input: %s", agent_type, str(request.input_data)[:100])
+        try:
+            # Override agent_type from URL path
+            request.agent_type = agent_type
+            response = AgentRegistry.run_agent(
+                agent_type=request.agent_type,
+                input_data=request.input_data,
+                max_steps=request.max_steps or 5
+            )
+            return response
+        except Exception as e:
+            logger.error("Error running agent %s: %s", agent_type, e, exc_info=True)
+            raise HTTPException(status_code=500, detail=f"Agent execution error: {str(e)}")
+    
+    @app.post("/agents/quick/explain")
+    def quick_explain_endpoint(request: dict):
+        """
+        Quick code explanation endpoint.
+        """
+        code = request.get("code", "")
+        language = request.get("language", "Python")
+        
+        if not code:
+            raise HTTPException(status_code=400, detail="Code is required")
+        
+        try:
+            from src.agents.api import quick_explain
+            result = quick_explain(code, language)
+            return {"result": result}
+        except Exception as e:
+            logger.error("Error in quick explain: %s", e, exc_info=True)
+            raise HTTPException(status_code=500, detail=str(e))
+    
+    @app.post("/agents/quick/debug")
+    def quick_debug_endpoint(request: dict):
+        """
+        Quick error debugging endpoint.
+        """
+        code = request.get("code", "")
+        error = request.get("error", "")
+        
+        if not code:
+            raise HTTPException(status_code=400, detail="Code is required")
+        
+        try:
+            from src.agents.api import quick_debug
+            result = quick_debug(code, error)
+            return {"result": result}
+        except Exception as e:
+            logger.error("Error in quick debug: %s", e, exc_info=True)
+            raise HTTPException(status_code=500, detail=str(e))
+    
+    @app.post("/agents/quick/review")
+    def quick_review_endpoint(request: dict):
+        """
+        Quick code review endpoint.
+        """
+        code = request.get("code", "")
+        
+        try:
+            from src.agents.api import quick_review
+            result = quick_review(code)
+            return {"result": result}
+        except Exception as e:
+            logger.error("Error in quick review: %s", e, exc_info=True)
+            raise HTTPException(status_code=500, detail=str(e))
+
+else:
+    @app.get("/agents")
+    def list_agents():
+        """
+        Agent framework not available.
+        """
+        return {
+            "agents": {},
+            "status": "Not Available",
+            "message": "Claude agent framework is not installed or configured"
+        }
 
 if __name__ == "__main__":
     # Protect entry point to avoid recursive spawning  [oai_citation_attribution:11‡Stack Overflow](https://stackoverflow.com/questions/73908734/how-to-run-uvicorn-fastapi-server-as-a-module-from-another-python-file?utm_source=chatgpt.com)
