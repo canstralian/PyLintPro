@@ -83,9 +83,11 @@ def setup_logging(
     name: str = __name__,
     level: str = "INFO",
     fmt: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-) -> None:
+) -> logging.Logger:
     """
     Configure the root logger with a consistent format and level.
     """
     logging.basicConfig(level=level, format=fmt)
-    logging.getLogger(name).debug("Logging configured for %s at %s level", name, level)
+    logger = logging.getLogger(name)
+    logger.debug("Logging configured for %s at %s level", name, level)
+    return logger

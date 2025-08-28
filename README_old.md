@@ -137,159 +137,148 @@ Full GitHub App demo available during pilot program.
 
 ## ⚡ Installation
 
-### For Pilot Program Participants
-
-1. **Install the GitHub App**: [Add Mendicant to your repositories](https://github.com/apps/mendicant-ai)
-2. **Configure Access**: Grant access to repositories you want monitored
-3. **Onboarding Call**: Schedule your setup session
-
-### For Development/Testing
-
-#### Prerequisites
+### Prerequisites
 
 - Python 3.9 or higher
-- PostgreSQL 12+ (for full functionality)
-- Redis (for Celery task queue)
+- `flake8`
+- `autopep8`
+- `gradio`
 
-#### Local Setup
+Install dependencies:
 
 ```bash
-git clone https://github.com/canstralian/PyLintPro.git
-cd PyLintPro
 pip install -r requirements.txt
 
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your database and GitHub credentials
 
-# Initialize database
-python scripts/init_db.py
 
-# Start the application
-python scripts/run_backend.py
-```
+⸻
 
----
+🛠️ Usage
 
-## 🛠️ Usage
+Web Interface
+	1.	Clone the repository:
 
-### GitHub App
+git clone https://github.com/canstralian/PyLintPro.git
+cd PyLintPro
 
-Once installed, Mendicant automatically:
-1. **Monitors** your repositories for health issues
-2. **Analyzes** code, tests, and configurations  
-3. **Creates** Pull Requests with fixes
-4. **Tracks** progress and reports on improvements
 
-### Web Interface
+	2.	Run the Gradio app:
 
-For testing and development:
-1. Run the application: `python app.py`
-2. Access at: `http://127.0.0.1:7860`
-3. Paste code or upload files for analysis
+python app.py
 
-### CLI Usage
 
-Standalone repository analysis:
+	3.	Access the application at:
+http://127.0.0.1:7860
+	4.	Upload a .py file or paste code to lint and auto-fix.
 
-```bash
-python scripts/analyze_repo.py /path/to/repository
-```
+⸻
 
-Generate health report:
-```bash
-python scripts/health_report.py --repo-url https://github.com/owner/repo
-```
+CLI Usage
 
----
+You can run PyLintPro directly from the command line to lint a file:
 
-## 🔍 Repository Health Checks
+python lint.py your_script.py
 
-Mendicant performs comprehensive health assessments:
+Example:
 
-### Code Quality
-- **Linting Issues**: PEP 8, Flake8, ESLint violations
-- **Code Complexity**: Cyclomatic complexity analysis
-- **Dead Code**: Unused imports, variables, functions
-- **Code Duplication**: Identify copy-paste issues
+python lint.py main.py
 
-### Security
-- **Dependency Vulnerabilities**: Known CVEs in dependencies
-- **Secret Detection**: Exposed API keys, passwords
-- **Configuration Issues**: Insecure defaults, permissions
-- **SAST Analysis**: Static application security testing
+The script will output:
+   •   Linting issues detected
+   •   Auto-fix suggestions
+   •   Corrected output saved to a file (*_fixed.py).
 
-### Testing & CI
-- **Flaky Tests**: Tests with inconsistent results
-- **Test Coverage**: Missing or inadequate test coverage
-- **CI Performance**: Slow or failing build pipelines
-- **Test Quality**: Test antipatterns and improvements
+⸻
 
-### Documentation
-- **README Quality**: Missing sections, outdated information
-- **API Documentation**: Missing or inconsistent docs
-- **Code Comments**: Outdated or insufficient comments
-- **Changelog**: Missing or improperly formatted
+⚙️ Advanced Options
 
----
+Customize linting behavior via optional arguments:
+   •   Ignore specific Flake8 rules:
 
-## ☁️ Deployment
+python lint.py your_script.py --ignore=E501,W503
 
-### Production (GitHub App)
 
-Mendicant is deployed as a GitHub App with enterprise-grade infrastructure:
-- **Auto-scaling**: Handles repositories of any size
-- **High Availability**: 99.9% uptime SLA
-- **Security**: SOC 2 compliant infrastructure
-- **Privacy**: Your code never leaves secure analysis environment
+   •   Output corrected code to a custom path:
 
-### Development Environment
+python lint.py your_script.py --output=formatted/main_fixed.py
 
-```bash
-# Using Docker Compose
-docker-compose up -d
 
-# Manual setup
-python scripts/run_backend.py --env=development
-```
 
----
+⸻
 
-## 🤝 Contributing
+☁️ Deployment
 
-We welcome contributions to Mendicant!
+Hugging Face Spaces (Recommended)
 
-1. **Fork** this repository
-2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Follow** coding standards: PEP 8 compliance, no lint warnings
-4. **Test** your changes thoroughly
-5. **Submit** a Pull Request
+Use the included README.md, requirements.txt, and app.py.
+Set Space SDK to Gradio and Python version to 3.9 or higher.
 
-### Development Guidelines
-- All PRs require passing tests and code review
-- New features should include documentation
-- Breaking changes require RFC discussion
+Docker
 
----
+(Coming soon)
 
-## 📫 Contact
+docker build -t pylintpro .
+docker run -p 7860:7860 pylintpro
 
-### Sales & Partnerships
-- **Pilot Program**: [Book a call](https://calendly.com/mendicant-ai/pilot)
-- **Enterprise**: [sales@mendicant.ai](mailto:sales@mendicant.ai)
 
-### Support & Development  
-- **GitHub Issues**: [Submit a ticket](https://github.com/canstralian/PyLintPro/issues)
-- **Technical Support**: [support@mendicant.ai](mailto:support@mendicant.ai)
 
-### Follow Our Journey
-- **Public Updates**: [GitHub Discussions](https://github.com/canstralian/PyLintPro/discussions)
-- **Weekly Progress**: Check the scoreboard above
+⸻
 
----
+🛤️ Roadmap
+   •   Real-time web linting
+   •   CLI support
+   •   Multi-file upload support
+   •   Custom linting profiles per project
+   •   CI/CD integration (GitHub Actions plugin)
+   •   Docker containerization
 
-**Mendicant AI**: Making every repository self-healing.
+⸻
 
-*Building the future where repositories automatically maintain themselves, so engineering teams can focus on what matters most: shipping great products.*
+⚠️ Known Limitations
+   •   Maximum upload size: 10 MB per .py file.
+   •   Processing speed slows for extremely large scripts (>5,000 lines).
+   •   Autopep8 fixes most but not all complex style violations.
+
+⸻
+
+🤝 Contributing
+
+We welcome contributions!
+	1.	Fork this repository
+	2.	Create a new feature branch:
+
+git checkout -b feature/my-new-feature
+
+
+	3.	Follow coding standards:
+      •   PEP 8 compliance
+      •   No new lint warnings (flake8 .)
+	4.	Test your changes.
+	5.	Submit a Pull Request.
+
+Please open an issue first if making large changes.
+
+⸻
+
+📄 License
+
+This project is licensed under the MIT License.
+
+⸻
+
+🙏 Acknowledgements
+   •   Gradio
+   •   Flake8
+   •   autopep8
+
+⸻
+
+📫 Contact
+   •   Email: support@pylintpro.com
+   •   GitHub Issues: Submit a Ticket
+
+⸻
+
+PyLintPro: Bring clarity, consistency, and confidence to your Python projects.
 
 ---
