@@ -1,83 +1,107 @@
+
 ---
 license: apache-2.0
-title: PyLintPro
+title: Mendicant AI
 sdk: gradio
-emoji: 👁
-colorFrom: green
-colorTo: yellow
-short_description: A Gradio-based Python code linting and formatting application.
+emoji: 🤖
+colorFrom: indigo
+colorTo: purple
+short_description: An AI-powered development assistant for code analysis, project management, and GitHub integration.
 sdk_version: 5.14.0
 ---
 
-# PyLintPro
+# 🤖 Mendicant AI
 
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
-![Flake8](https://img.shields.io/badge/Flake8-%E2%9C%94-green.svg)
-![Issues](https://img.shields.io/github/issues/canstralian/PyLintPro)
-[![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/PyLintPro)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
+![FastAPI](https://img.shields.io/badge/FastAPI-%F0%9F%9A%80-green.svg)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%E2%9C%94-blue.svg)
+![GitHub Integration](https://img.shields.io/badge/GitHub-OAuth-black?logo=github)
+[![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/MendicantAI)
 
 ---
 
-**PyLintPro** is an AI-enhanced, Gradio-powered application that **lints, formats, and improves** Python code effortlessly.  
-Built for developers who demand **clarity**, **speed**, and **compliance** with **PEP 8** and **Flake8** standards.
+**Mendicant AI** is an **AI-powered development assistant** designed to streamline the way developers and teams build software.  
+It combines **intelligent repository analysis, project management tools, and seamless GitHub integration** into a single platform.  
 
-Paste code or upload `.py` files — PyLintPro instantly formats your code, detects issues, and generates comprehensive reports.
+Think of it as your **Swiss Army Knife for modern development** — balancing **speed**, **security**, and **clarity**.  
 
 ---
 
 ## 📚 Table of Contents
 
-- [Features](#-features)
-- [Demo](#-demo)
-- [Installation](#-installation)
-- [Usage](#-usage)
+- [✨ Features](#-features)
+- [🚀 Demo](#-demo)
+- [⚡ Installation](#-installation)
+- [🛠️ Usage](#-usage)
   - [Web Interface](#web-interface)
   - [CLI Usage](#cli-usage)
-- [Advanced Options](#-advanced-options)
-- [Deployment](#-deployment)
-- [Roadmap](#-roadmap)
-- [Known Limitations](#-known-limitations)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Acknowledgements](#-acknowledgements)
-- [Contact](#-contact)
+- [⚙️ Tech Stack](#-tech-stack)
+- [☁️ Deployment](#-deployment)
+- [🛤️ Roadmap](#-roadmap)
+- [⚠️ Known Limitations](#-known-limitations)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [🙏 Acknowledgements](#-acknowledgements)
+- [📫 Contact](#-contact)
 
 ---
 
 ## ✨ Features
 
-- **Real-Time Code Linting**: Detects style issues, errors, and complexity violations.
-- **Automatic Code Formatting**: Uses `autopep8` for quick, standards-compliant fixes.
-- **PEP 8 and Flake8 Compliance**: Enforces official Python styling best practices.
-- **File Upload Support**: Batch process `.py` files.
-- **Customizable Rules**: Choose which Flake8 checks to apply or ignore.
-- **Detailed Lint Reports**: Displays unresolved issues with error codes.
-- **Minimalistic UI**: Powered by Gradio with responsive dark/light mode.
-- **Lightweight CLI**: Run PyLintPro on the command line for automation.
+- 🔐 **Authentication & Security**
+  - Email/password auth with JWT tokens
+  - GitHub OAuth support
+  - Secure password hashing (`bcrypt`)
+  - Session management and user profiles
+
+- 📊 **Project Management**
+  - Create, update, and delete projects
+  - Link projects to GitHub repositories
+  - Organize and track project progress
+  - Isolated user-specific project spaces
+
+- 🔍 **Repository Analysis**
+  - Automated GitHub repo scanning
+  - Code quality assessments
+  - Language distribution insights
+  - Commit activity metrics
+
+- 🛠️ **GitHub Integration**
+  - OAuth-based authentication
+  - Repo browsing and API data fetching
+  - Secure token handling
+  - AI-assisted insights for repos
 
 ---
 
 ## 🚀 Demo
 
-Try the live demo on [Hugging Face Spaces](https://huggingface.co/spaces/Canstralian/PyLintPro).
+Try the live demo on [Hugging Face Spaces](https://huggingface.co/spaces/Canstralian/MendicantAI).
 
 ---
 
 ## ⚡ Installation
 
 ### Prerequisites
+- Python 3.9 or higher  
+- Node.js (for frontend)  
+- PostgreSQL database  
 
-- Python 3.9 or higher
-- `flake8`
-- `autopep8`
-- `gradio`
-
-Install dependencies:
+### Setup
 
 ```bash
+# Clone repository
+git clone https://github.com/canstralian/MendicantAI.git
+cd MendicantAI
+
+# Backend setup
+cd backend
 pip install -r requirements.txt
 
+# Frontend setup
+cd frontend
+npm install
 
 
 ⸻
@@ -85,129 +109,105 @@ pip install -r requirements.txt
 🛠️ Usage
 
 Web Interface
-	1.	Clone the repository:
 
-git clone https://github.com/canstralian/PyLintPro.git
-cd PyLintPro
+# Run backend
+cd backend
+uvicorn main:app --reload
 
+# Run frontend
+cd frontend
+npm run dev
 
-	2.	Run the Gradio app:
-
-python app.py
-
-
-	3.	Access the application at:
-http://127.0.0.1:7860
-	4.	Upload a .py file or paste code to lint and auto-fix.
-
-⸻
+	•	Visit: http://127.0.0.1:3000 (frontend)
+	•	API available at: http://127.0.0.1:8000
 
 CLI Usage
 
-You can run PyLintPro directly from the command line to lint a file:
+Run repository analysis from the terminal:
 
-python lint.py your_script.py
+python scripts/analyze_repo.py --url https://github.com/user/repo
 
-Example:
-
-python lint.py main.py
-
-The script will output:
-   •   Linting issues detected
-   •   Auto-fix suggestions
-   •   Corrected output saved to a file (*_fixed.py).
 
 ⸻
 
-⚙️ Advanced Options
-
-Customize linting behavior via optional arguments:
-   •   Ignore specific Flake8 rules:
-
-python lint.py your_script.py --ignore=E501,W503
-
-
-   •   Output corrected code to a custom path:
-
-python lint.py your_script.py --output=formatted/main_fixed.py
-
-
+⚙️ Tech Stack
+	•	Backend: FastAPI · SQLAlchemy · PyJWT · PostgreSQL
+	•	Frontend: React · TailwindCSS · TypeScript · Vite
+	•	Dev & Testing: Pytest · Asyncio · HTTPX · Docker
+	•	Integrations: GitHub API · OAuth 2.0
 
 ⸻
 
 ☁️ Deployment
 
-Hugging Face Spaces (Recommended)
+Hugging Face Spaces
 
-Use the included README.md, requirements.txt, and app.py.
-Set Space SDK to Gradio and Python version to 3.9 or higher.
+Deploy with Gradio for quick demos and prototypes.
+
+Replit
+	1.	Import the repo
+	2.	Install dependencies (pip install -r requirements.txt)
+	3.	Run the backend + frontend directly in Replit
 
 Docker
 
-(Coming soon)
-
-docker build -t pylintpro .
-docker run -p 7860:7860 pylintpro
-
+docker-compose up --build
 
 
 ⸻
 
 🛤️ Roadmap
-   •   Real-time web linting
-   •   CLI support
-   •   Multi-file upload support
-   •   Custom linting profiles per project
-   •   CI/CD integration (GitHub Actions plugin)
-   •   Docker containerization
+	•	AI-driven code reviews
+	•	PR linting & auto-fix suggestions
+	•	Team collaboration dashboards
+	•	CI/CD GitHub Actions integration
+	•	VS Code plugin
 
 ⸻
 
 ⚠️ Known Limitations
-   •   Maximum upload size: 10 MB per .py file.
-   •   Processing speed slows for extremely large scripts (>5,000 lines).
-   •   Autopep8 fixes most but not all complex style violations.
+	•	Repo analysis may be slow for very large projects (>1GB).
+	•	Only GitHub repos supported in this release (GitLab/Bitbucket planned).
+	•	Hugging Face demo runs with limited resources (use Docker for production).
 
 ⸻
 
 🤝 Contributing
 
 We welcome contributions!
-	1.	Fork this repository
-	2.	Create a new feature branch:
+	1.	Fork this repo
+	2.	Create a feature branch:
 
-git checkout -b feature/my-new-feature
+git checkout -b feature/my-feature
 
 
-	3.	Follow coding standards:
-      •   PEP 8 compliance
-      •   No new lint warnings (flake8 .)
-	4.	Test your changes.
-	5.	Submit a Pull Request.
-
-Please open an issue first if making large changes.
+	3.	Follow standards (PEP 8, ESLint, Prettier)
+	4.	Submit a Pull Request
 
 ⸻
 
 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the Apache 2.0 License.
+See LICENSE for details.
 
 ⸻
 
 🙏 Acknowledgements
-   •   Gradio
-   •   Flake8
-   •   autopep8
+	•	FastAPI
+	•	React
+	•	PostgreSQL
+	•	Hugging Face Spaces
 
 ⸻
 
 📫 Contact
-   •   Email: support@pylintpro.com
-   •   GitHub Issues: Submit a Ticket
+	•	GitHub Issues: Submit a Ticket
+	•	Hugging Face: Discussion Board
+	•	Email: support@mendicantai.dev
 
 ⸻
 
-PyLintPro: Bring clarity, consistency, and confidence to your Python projects.
+🚀 Mendicant AI — your intelligent partner for secure, scalable, and insightful software development.
 
 ---
