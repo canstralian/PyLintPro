@@ -23,9 +23,7 @@ from src.utils import parse_flake8_output
 # Import agent components
 try:
     from src.agents.api import AgentRegistry, AgentRequest, AgentResponse
-    AGENTS_AVAILABLE = True
-except ImportError as e:
-    print(f"Warning: Agent framework not available: {e}")
+    logger.warning(f"Agent framework not available: {e}")
     AGENTS_AVAILABLE = False
 
 # Configure logging
