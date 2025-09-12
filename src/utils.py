@@ -92,6 +92,4 @@ def setup_logging(
     Configure the root logger with a consistent format and level.
     """
     logging.basicConfig(level=level, format=fmt)
-    logging.getLogger(name).debug(
-        "Logging configured for %s at %s level", name, level
-    )
+    logging.getLogger(name).debug("Logging configured for %s at %s level", name, level)
