@@ -45,7 +45,7 @@ async def demo_handler(data):
 async def price_alert_handler(data):
     """Demo handler for price alerts."""
     if data['price'] > 50000:
-        print(f"🚨 Price Alert: {data['symbol']} above $50, 000!")
+        print(f"🚨 Price Alert: {data['symbol']} above $50,000!")
 
     # Stop after first alert for demo
     return False
