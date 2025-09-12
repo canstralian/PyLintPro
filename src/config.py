@@ -16,7 +16,8 @@ DEFAULT_IGNORE_RULES = ["E203", "W503"]  # To align with Black formatting
 # Application metadata
 APP_NAME = "PyLintPro"
 APP_VERSION = "1.0.0"
-APP_DESCRIPTION = "A Gradio app that helps users improve Python code to meet Flake8 and PEP 8 standards."
+APP_DESCRIPTION = ("A Gradio app that helps users improve Python code to "
+                   "meet Flake8 and PEP 8 standards.")
 
 # Gradio interface settings
 GRADIO_THEME = "default"

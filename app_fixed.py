@@ -14,10 +14,9 @@ def lint_code(code):
     try:
         formatted_code = autopep8.fix_code(code, options={"aggressive": 1})
     except Exception as e:
-        print(f"Warning: autopep8 formatting failed ({e}), "
-              "using original code")
+        print(f"Warning: autopep8 formatting failed ({e}), using original code")
         formatted_code = code
-
+    
     # Write to temp file for flake8
     with tempfile.NamedTemporaryFile(mode="w+", suffix=".py",
                                      delete=False) as tmp:
