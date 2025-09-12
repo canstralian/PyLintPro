@@ -1,15 +1,16 @@
 # src/main.py
 
 import gradio as gr
-from src.config import GRADIO_THEME, GRADIO_CSS       # Centralized UI settings
-from src.lint import lint_code                         # Business logic for formatting and linting
+from src.config import GRADIO_THEME, GRADIO_CSS  # Centralized UI settings
+from src.lint import lint_code  # Business logic for formatting and linting
+
 
 def main():
     # Build the Gradio Blocks application
     with gr.Blocks(
-        theme=GRADIO_THEME,                            # Apply a prebuilt Soft theme
-        css=GRADIO_CSS,                                 # Inject custom CSS for padding and fonts
-        fill_width=True                                 # Use full browser width for layout
+        theme=GRADIO_THEME,  # Apply a prebuilt Soft theme
+        css=GRADIO_CSS,  # Inject custom CSS for padding and fonts
+        fill_width=True  # Use full browser width for layout
     ) as demo:
         # Side-by-side input/output editors
         with gr.Row(equal_height=True):
@@ -45,6 +46,7 @@ def main():
         )
 
     demo.launch()
+
 
 if __name__ == "__main__":
     main()
