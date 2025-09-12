@@ -23,7 +23,7 @@ async def demo_handler(data):
     price = data['price']
     exchange = data['exchange']
 
-    print(f"📈 {symbol} on {exchange}: ${price: .2f}")
+    print(f"📈 {symbol} on {exchange}: ${price:.2f}")
 
     # For demo purposes, stop after processing 5 data points
     if hasattr(demo_handler, '_demo_count'):
