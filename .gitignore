@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-.venv/
-.venv/
-=======
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -173,5 +169,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
->>>>>>> 4882d89 (Initial commit)
-.venv/
+
+# Project specific
+logs/
+README_OLD.md
