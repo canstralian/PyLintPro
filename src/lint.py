@@ -10,32 +10,33 @@ from src.utils import safe_run, parse_flake8_output, format_issues_for_display
 def basic_format_code(code: str) -> str:
     """
     Apply basic Python formatting improvements.
-    
+
     Args:
         code: Python source code to format
-        
+
     Returns:
         Formatted Python code
     """
     if not code or not code.strip():
         return code
-    
+
     lines = code.split('\n')
     formatted_lines = []
-    
+
     for line in lines:
         # Basic formatting rules
         # Add space after commas (but not in strings)
-        if not line.strip().startswith('#') and not line.strip().startswith('"""'):
+        if (not line.strip().startswith('#') and
+                not line.strip().startswith('"""')):
             # Simple comma spacing fix
             line = re.sub(r',(\S)', r', \1', line)
             # Simple operator spacing fix
             line = re.sub(r'(\w)=(\w)', r'\1 = \2', line)
             line = re.sub(r'(\w)\+(\w)', r'\1 + \2', line)
             line = re.sub(r'(\w)-(\w)', r'\1 - \2', line)
-        
+
         formatted_lines.append(line)
-    
+
     return '\n'.join(formatted_lines)
 
 
@@ -139,7 +140,7 @@ def enhanced_lint_code(code: str) -> str:
 
     # Apply basic formatting
     formatted_code = basic_format_code(code)
-    
+
     # Run linting on formatted code
     result = lint_code(formatted_code)
 

@@ -58,9 +58,9 @@ def format_issues_for_display(issues: List[Dict[str, Any]]) -> str:
         return "No linting issues found."
     lines = []
     for issue in issues:
-        file_info = f"{issue['file']}:{issue['line']}:{issue['column']}"
-        issue_info = f"[{issue['code']}] {issue['message']}"
-        issue_line = f"{file_info} {issue_info}"
+        file_part = f"{issue['file']}:{issue['line']}:{issue['column']}"
+        issue_part = f"[{issue['code']}] {issue['message']}"
+        issue_line = f"{file_part} {issue_part}"
         lines.append(issue_line)
     return "\n".join(lines)
 

@@ -1,8 +1,8 @@
 # src/main.py
 
 import gradio as gr
-from .config import GRADIO_THEME, GRADIO_CSS  # Centralized UI settings
-from .lint import enhanced_lint_code as lint_code  # Enhanced linting logic
+from src.config import GRADIO_THEME, GRADIO_CSS  # Centralized UI settings
+from src.lint import enhanced_lint_code as lint_code  # Enhanced linting logic
 
 
 def main():

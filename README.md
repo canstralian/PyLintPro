@@ -1,213 +1,246 @@
-
----
-license: apache-2.0
-title: Mendicant AI
-sdk: gradio
-emoji: 🤖
-colorFrom: indigo
-colorTo: purple
-short_description: An AI-powered development assistant for code analysis, project management, and GitHub integration.
-sdk_version: 5.14.0
----
-
-# 🤖 Mendicant AI
+# 🔧 PyLintPro
 
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
-![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-%F0%9F%9A%80-green.svg)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%E2%9C%94-blue.svg)
-![GitHub Integration](https://img.shields.io/badge/GitHub-OAuth-black?logo=github)
-[![Hugging Face Space](https://img.shields.io/badge/Space-Status-green)](https://huggingface.co/spaces/Canstralian/MendicantAI)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)
+![Flake8](https://img.shields.io/badge/Flake8-6.0.0-green.svg)
+![Gradio](https://img.shields.io/badge/Gradio-5.45.0-purple.svg)
 
 ---
 
-**Mendicant AI** is an **AI-powered development assistant** designed to streamline the way developers and teams build software.  
-It combines **intelligent repository analysis, project management tools, and seamless GitHub integration** into a single platform.  
+**PyLintPro** is an **AI-enhanced Python code quality tool** built with Gradio that helps developers improve their Python code to meet **PEP 8 and Flake8 standards**.
 
-Think of it as your **Swiss Army Knife for modern development** — balancing **speed**, **security**, and **clarity**.  
-
----
-
-## 📚 Table of Contents
-
-- [✨ Features](#-features)
-- [🚀 Demo](#-demo)
-- [⚡ Installation](#-installation)
-- [🛠️ Usage](#-usage)
-  - [Web Interface](#web-interface)
-  - [CLI Usage](#cli-usage)
-- [⚙️ Tech Stack](#-tech-stack)
-- [☁️ Deployment](#-deployment)
-- [🛤️ Roadmap](#-roadmap)
-- [⚠️ Known Limitations](#-known-limitations)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [🙏 Acknowledgements](#-acknowledgements)
-- [📫 Contact](#-contact)
+Think of it as your **intelligent code quality assistant** — combining **automated linting, basic formatting, and real-time feedback** in an easy-to-use web interface.
 
 ---
 
 ## ✨ Features
 
-- 🔐 **Authentication & Security**
-  - Email/password auth with JWT tokens
-  - GitHub OAuth support
-  - Secure password hashing (`bcrypt`)
-  - Session management and user profiles
+- 🔍 **Advanced Code Analysis**
+  - Real-time Flake8 linting with detailed error reporting
+  - Python syntax validation before processing
+  - Comprehensive error categorization and explanations
 
-- 📊 **Project Management**
-  - Create, update, and delete projects
-  - Link projects to GitHub repositories
-  - Organize and track project progress
-  - Isolated user-specific project spaces
+- 🎨 **Smart Code Formatting**
+  - Basic Python code formatting (spacing, operators)
+  - PEP 8 compliance checking
+  - Line length and style validation
 
-- 🔍 **Repository Analysis**
-  - Automated GitHub repo scanning
-  - Code quality assessments
-  - Language distribution insights
-  - Commit activity metrics
+- 🌐 **Interactive Web Interface**
+  - Clean Gradio-based UI with side-by-side code editors
+  - Pre-loaded examples for quick testing
+  - Real-time linting feedback with emojis and formatting
 
-- 🛠️ **GitHub Integration**
-  - OAuth-based authentication
-  - Repo browsing and API data fetching
-  - Secure token handling
-  - AI-assisted insights for repos
+- ⚙️ **Robust Architecture**
+  - Modular codebase with proper separation of concerns
+  - Comprehensive error handling and logging
+  - Type hints and documentation throughout
+  - Full test coverage with pytest
 
 ---
 
-## 🚀 Demo
-
-Try the live demo on [Hugging Face Spaces](https://huggingface.co/spaces/Canstralian/MendicantAI).
-
----
-
-## ⚡ Installation
+## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.9 or higher  
-- Node.js (for frontend)  
-- PostgreSQL database  
+- Python 3.8 or higher
+- pip package manager
 
-### Setup
+### Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/canstralian/MendicantAI.git
-cd MendicantAI
+# Clone the repository
+git clone https://github.com/canstralian/PyLintPro.git
+cd PyLintPro
 
-# Backend setup
-cd backend
+# Install dependencies
 pip install -r requirements.txt
 
-# Frontend setup
-cd frontend
-npm install
+# Run the application
+python app.py
+```
 
+The application will be available at `http://127.0.0.1:7860`
 
-⸻
+---
 
-🛠️ Usage
+## 🛠️ Usage
 
-Web Interface
+### Web Interface
 
-# Run backend
-cd backend
-uvicorn main:app --reload
+1. **Start the application**: `python app.py`
+2. **Open your browser** to `http://127.0.0.1:7860`
+3. **Paste your Python code** in the left editor
+4. **Click "Lint Code"** to get formatted code and analysis
+5. **Review the results** in the right editor with detailed feedback
 
-# Run frontend
-cd frontend
-npm run dev
+### Modular Usage
 
-	•	Visit: http://127.0.0.1:3000 (frontend)
-	•	API available at: http://127.0.0.1:8000
+You can also use PyLintPro as a Python module:
 
-CLI Usage
+```python
+from src.lint import enhanced_lint_code
 
-Run repository analysis from the terminal:
+code = """
+def bad_function( x,y ):
+    result=x+y
+    return result
+"""
 
-python scripts/analyze_repo.py --url https://github.com/user/repo
+result = enhanced_lint_code(code)
+print(result)
+```
 
+### CLI Usage
 
-⸻
+```bash
+# Run with PYTHONPATH
+PYTHONPATH=. python src/main.py
+```
 
-⚙️ Tech Stack
-	•	Backend: FastAPI · SQLAlchemy · PyJWT · PostgreSQL
-	•	Frontend: React · TailwindCSS · TypeScript · Vite
-	•	Dev & Testing: Pytest · Asyncio · HTTPX · Docker
-	•	Integrations: GitHub API · OAuth 2.0
+---
 
-⸻
+## 📊 Code Quality Features
 
-☁️ Deployment
+### Syntax Validation
+- ✅ Validates Python syntax before processing
+- ❌ Reports syntax errors with line numbers and descriptions
+- 🔧 Prevents processing of invalid code
 
-Hugging Face Spaces
+### Linting Analysis
+- **Flake8 Integration**: Uses Flake8 6.0.0 for comprehensive code analysis
+- **PEP 8 Compliance**: Checks for Python style guide violations
+- **Detailed Reports**: Line-by-line issue reporting with error codes
+- **Smart Filtering**: Ignores formatting conflicts (E203, W503)
 
-Deploy with Gradio for quick demos and prototypes.
+### Basic Formatting
+- **Operator Spacing**: Adds spaces around `=`, `+`, `-` operators
+- **Comma Spacing**: Fixes spacing after commas in function parameters
+- **Non-destructive**: Preserves original code structure and comments
 
-Replit
-	1.	Import the repo
-	2.	Install dependencies (pip install -r requirements.txt)
-	3.	Run the backend + frontend directly in Replit
+---
 
-Docker
+## 🏗️ Architecture
 
-docker-compose up --build
+```
+PyLintPro/
+├── src/
+│   ├── __init__.py      # Package initialization and exports
+│   ├── config.py        # Configuration and constants
+│   ├── lint.py          # Core linting and formatting logic
+│   ├── main.py          # Modular Gradio application
+│   └── utils.py         # Utility functions and helpers
+├── tests/
+│   ├── test_lint.py     # Tests for linting functionality
+│   └── test_utils_new.py # Tests for utility functions
+├── app.py               # Standalone Gradio application
+├── requirements.txt     # Python dependencies
+└── pyproject.toml       # Project configuration
+```
 
+### Key Components
 
-⸻
+- **`src/lint.py`**: Core linting engine with syntax validation and formatting
+- **`src/utils.py`**: Utility functions for command execution and output parsing
+- **`src/config.py`**: Centralized configuration and theming
+- **`app.py`**: Standalone web application
+- **`src/main.py`**: Modular web application
 
-🛤️ Roadmap
-	•	AI-driven code reviews
-	•	PR linting & auto-fix suggestions
-	•	Team collaboration dashboards
-	•	CI/CD GitHub Actions integration
-	•	VS Code plugin
+---
 
-⸻
+## 🧪 Testing
 
-⚠️ Known Limitations
-	•	Repo analysis may be slow for very large projects (>1GB).
-	•	Only GitHub repos supported in this release (GitLab/Bitbucket planned).
-	•	Hugging Face demo runs with limited resources (use Docker for production).
+PyLintPro includes comprehensive test coverage:
 
-⸻
+```bash
+# Run all tests
+python -m pytest
 
-🤝 Contributing
+# Run specific test files
+python -m pytest tests/test_lint.py -v
+python -m pytest tests/test_utils_new.py -v
 
-We welcome contributions!
-	1.	Fork this repo
-	2.	Create a feature branch:
+# Run with verbose output
+python -m pytest -v
+```
 
-git checkout -b feature/my-feature
+**Test Coverage**: 12 tests covering:
+- Syntax validation functionality
+- Code formatting operations
+- Linting engine integration
+- Utility function behavior
+- Error handling scenarios
 
+---
 
-	3.	Follow standards (PEP 8, ESLint, Prettier)
-	4.	Submit a Pull Request
+## ⚡ Performance
 
-⸻
+- **Fast Processing**: Optimized for quick feedback on code changes
+- **Memory Efficient**: Uses temporary files for safe code analysis
+- **Error Resilient**: Comprehensive error handling prevents crashes
+- **Scalable**: Modular design supports easy feature additions
 
-📄 License
+---
 
-This project is licensed under the Apache 2.0 License.
-See LICENSE for details.
+## 🛠️ Development
 
-⸻
+### Code Quality Standards
 
-🙏 Acknowledgements
-	•	FastAPI
-	•	React
-	•	PostgreSQL
-	•	Hugging Face Spaces
+PyLintPro follows its own standards:
+- **PEP 8 Compliance**: All code follows Python style guidelines
+- **Type Hints**: Full type annotation for better IDE support
+- **Documentation**: Comprehensive docstrings for all functions
+- **Testing**: High test coverage with pytest
 
-⸻
+### Contributing
 
-📫 Contact
-	•	GitHub Issues: Submit a Ticket
-	•	Hugging Face: Discussion Board
-	•	Email: support@mendicantai.dev
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Follow coding standards**: Use Flake8 and format with the project style
+4. **Add tests**: Ensure new features are tested
+5. **Submit a Pull Request**
 
-⸻
+---
 
-🚀 Mendicant AI — your intelligent partner for secure, scalable, and insightful software development.
+## 📦 Dependencies
+
+- **Core**: `gradio>=5.45.0`, `flake8==6.0.0`
+- **Development**: `pytest>=8.4.0`
+- **Optional**: `autopep8==2.0.2` (for advanced formatting)
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our contributing guidelines:
+
+1. **Code Style**: Follow PEP 8 and use type hints
+2. **Testing**: Add tests for new functionality
+3. **Documentation**: Update docs for user-facing changes
+4. **Git**: Use clear commit messages and proper branching
+
+---
+
+## 📄 License
+
+This project is licensed under the **Apache 2.0 License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgements
+
+- **Gradio**: For the excellent web interface framework
+- **Flake8**: For comprehensive Python linting capabilities
+- **Python Community**: For the PEP 8 style guide and best practices
+
+---
+
+## 📫 Support
+
+- **GitHub Issues**: [Submit a Bug Report](https://github.com/canstralian/PyLintPro/issues)
+- **Documentation**: Check the code comments and tests for examples
+- **Community**: Share your experience and improvements
+
+---
+
+🔧 **PyLintPro** — Your intelligent companion for clean, professional Python code.
 
 ---
