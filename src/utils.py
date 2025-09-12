@@ -1,11 +1,11 @@
 # src/utils.py
 
 import subprocess
-import tempfile
 import logging
 from pathlib import Path
 import yaml
 from typing import List, Dict, Any, Tuple, Optional
+
 
 def safe_run(
     cmd: List[str],
@@ -26,6 +26,7 @@ def safe_run(
         timeout=timeout
     )
     return result.returncode, result.stdout, result.stderr
+
 
 def parse_flake8_output(output: str) -> List[Dict[str, Any]]:
     """
@@ -48,6 +49,7 @@ def parse_flake8_output(output: str) -> List[Dict[str, Any]]:
             })
     return issues
 
+
 def format_issues_for_display(issues: List[Dict[str, Any]]) -> str:
     """
     Convert structured Flake8 issues into a human-readable string.
@@ -56,11 +58,12 @@ def format_issues_for_display(issues: List[Dict[str, Any]]) -> str:
         return "No linting issues found."
     lines = []
     for issue in issues:
-        lines.append(
-            f"{issue['file']}:{issue['line']}:{issue['column']} "
-            f"[{issue['code']}] {issue['message']}"
-        )
+        file_info = f"{issue['file']}:{issue['line']}:{issue['column']}"
+        issue_info = f"[{issue['code']}] {issue['message']}"
+        issue_line = f"{file_info} {issue_info}"
+        lines.append(issue_line)
     return "\n".join(lines)
+
 
 def load_examples(examples_dir: Path) -> List[str]:
     """
@@ -72,12 +75,14 @@ def load_examples(examples_dir: Path) -> List[str]:
             snippets.append(py_file.read_text())
     return snippets
 
+
 def load_yaml_config(config_path: Path) -> Dict[str, Any]:
     """
     Load a YAML configuration file into a Python dictionary.
     """
     with config_path.open("r") as f:
         return yaml.safe_load(f)
+
 
 def setup_logging(
     name: str = __name__,
@@ -88,4 +93,6 @@ def setup_logging(
     Configure the root logger with a consistent format and level.
     """
     logging.basicConfig(level=level, format=fmt)
-    logging.getLogger(name).debug("Logging configured for %s at %s level", name, level)
+    logging.getLogger(name).debug(
+        "Logging configured for %s at %s level", name, level
+    )

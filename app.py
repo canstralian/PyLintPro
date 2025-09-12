@@ -4,27 +4,40 @@ import tempfile
 import os
 import subprocess
 
+
 def lint_code(code):
     """
     Formats code with autopep8 and runs flake8 to collect linting issues.
     Returns the formatted code plus any flake8 warnings.
     """
-    # Format with autopep8
-    formatted_code = autopep8.fix_code(code, options={"aggressive": 1})
-    # Write to temp file for flake8
-    with tempfile.NamedTemporaryFile(mode="w+", suffix=".py", delete=False) as tmp:
-        tmp.write(formatted_code)
-        tmp_path = tmp.name
-    # Run flake8
-    result = subprocess.run(
-        ["flake8", tmp_path],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
-    os.unlink(tmp_path)
-    issues = result.stdout.strip() or "No issues found."
-    return f"{formatted_code}\n\n# Flake8 issues:\n{issues}"
+    if not code or not code.strip():
+        return "# No code provided for analysis"
+
+    try:
+        # Format with autopep8
+        formatted_code = autopep8.fix_code(
+            code, options={"aggressive": 1, "max_line_length": 88}
+        )
+        # Write to temp file for flake8
+        with tempfile.NamedTemporaryFile(
+            mode="w+", suffix=".py", delete=False
+        ) as tmp:
+            tmp.write(formatted_code)
+            tmp_path = tmp.name
+
+        # Run flake8
+        result = subprocess.run(
+            ["flake8", tmp_path, "--max-line-length=88", "--ignore=E203,W503"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        os.unlink(tmp_path)
+        issues = result.stdout.strip() or "✅ No issues found."
+        return f"{formatted_code}\n\n# 🔍 Flake8 Analysis:\n# {issues}"
+
+    except Exception as e:
+        return f"# ❌ Error processing code: {str(e)}\n\n{code}"
 
 
 # Iteration 1: Basic layout with two code editors
@@ -55,7 +68,14 @@ with gr.Blocks() as demo:
     gr.Examples(
         examples=[
             ["print( 'hello world' )"],
-            ["def foo():\n    x=1\n    return x"]
+            ["def foo():\n    x=1\n    return x"],
+            ["# Example with various PEP 8 issues\n"
+             "def bad_function( x,y ):\n"
+             "    result=x+y    # Missing spaces\n"
+             "    return result\n\n"
+             "class my_class:\n"
+             "    def __init__(self):\n"
+             "        pass"]
         ],
         inputs=code_input,
         label="Try These Snippets"
