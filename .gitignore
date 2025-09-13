@@ -175,3 +175,7 @@ cython_debug/
 .pypirc
 >>>>>>> 4882d89 (Initial commit)
 .venv/
+
+# GitHub summary outputs
+github_summary_*.md
+github_summary_*.json
