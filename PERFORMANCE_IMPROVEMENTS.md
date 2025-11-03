@@ -58,21 +58,25 @@ preprocessing = ColumnTransformer(
 
 ---
 
-### 3. scripts/github_summary.py
+### 3. data/data_processing.py
 
-**Issue**: List comprehension for filtering could be inefficient with large datasets
+**Issue**: Conditional logic could be clearer and more efficient
 ```python
-# Before (creates intermediate list)
-issues = [issue for issue in response.json() if 'pull_request' not in issue]
+# Before (inline ternary)
+numeric_cols = list(columns) if columns else df.select_dtypes(
+    include=["int64", "float64"]
+).columns.tolist()
 
-# After (more memory efficient for large datasets)
-issues = []
-for issue in response.json():
-    if 'pull_request' not in issue:
-        issues.append(issue)
+# After (clearer conditional)
+if columns:
+    numeric_cols = list(columns)
+else:
+    numeric_cols = df.select_dtypes(
+        include=["int64", "float64"]
+    ).columns.tolist()
 ```
 
-**Impact**: Better memory efficiency and clearer intent for large issue lists
+**Impact**: Improved readability and explicit intent
 
 ---
 
@@ -119,28 +123,6 @@ finally:
 ```
 
 **Impact**: Prevents temp file leaks and improves reliability
-
----
-
-### 6. data/data_processing.py
-
-**Issue**: Conditional logic could be clearer and more efficient
-```python
-# Before (inline ternary)
-numeric_cols = list(columns) if columns else df.select_dtypes(
-    include=["int64", "float64"]
-).columns.tolist()
-
-# After (clearer conditional)
-if columns:
-    numeric_cols = list(columns)
-else:
-    numeric_cols = df.select_dtypes(
-        include=["int64", "float64"]
-    ).columns.tolist()
-```
-
-**Impact**: Improved readability and explicit intent
 
 ---
 
