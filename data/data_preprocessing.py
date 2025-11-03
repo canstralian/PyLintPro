@@ -99,9 +99,7 @@ def build_preprocessing_pipeline(
 
 def preprocess_data(
     df: pd.DataFrame,
-    pipeline: ColumnTransformer,
-    numeric_cols: Optional[List[str]] = None,
-    categorical_cols: Optional[List[str]] = None
+    pipeline: ColumnTransformer
 ) -> pd.DataFrame:
     """
     Fit the pipeline on df and return a transformed DataFrame
@@ -110,8 +108,6 @@ def preprocess_data(
     Args:
         df: Input DataFrame
         pipeline: ColumnTransformer pipeline
-        numeric_cols: Pre-computed numeric column names (for performance)
-        categorical_cols: Pre-computed categorical column names
     """
     # Determine feature names after transform
     pipeline.fit(df)

@@ -42,7 +42,7 @@ def parse_flake8_output(output: str) -> List[Dict[str, Any]]:
             file_path, line_no, col_no, rest = parts
             rest_stripped = rest.strip()
             space_idx = rest_stripped.find(" ")
-            if space_idx > 0:
+            if space_idx > -1:  # -1 means not found
                 code = rest_stripped[:space_idx]
                 message = rest_stripped[space_idx + 1:]
                 issues.append({
