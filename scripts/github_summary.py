@@ -86,8 +86,11 @@ class GitHubSummaryGenerator:
         try:
             response = requests.get(url, headers=self.headers, params=params)
             response.raise_for_status()
-            # Filter out pull requests (they appear in issues API)
-            issues = [issue for issue in response.json() if 'pull_request' not in issue]
+            # Filter out pull requests (they appear in issues API) - optimized
+            issues = []
+            for issue in response.json():
+                if 'pull_request' not in issue:
+                    issues.append(issue)
             return issues
         except requests.RequestException as e:
             logging.warning(f"GitHub API not accessible ({e}), using sample data")

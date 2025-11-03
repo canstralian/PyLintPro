@@ -5,8 +5,7 @@ import logging
 from pathlib import Path
 from typing import List, Union, Dict, Optional
 from datasets import load_dataset, DatasetDict, IterableDataset
-from tqdm.auto import tqdm
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 
 # Configure module-level logger
 logging.basicConfig(
@@ -14,6 +13,7 @@ logging.basicConfig(
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 )
 logger = logging.getLogger(__name__)
+
 
 def buffered_stream(
     iterable: IterableDataset,
@@ -35,7 +35,8 @@ def buffered_stream(
                     break
             while futures:
                 # Yield the first completed batch
-                done, futures[:] = [f for f in futures if f.done()], [f for f in futures if not f.done()]
+                done = [f for f in futures if f.done()]
+                futures[:] = [f for f in futures if not f.done()]
                 for future in done:
                     yield future.result()
                     # Submit next
@@ -44,6 +45,7 @@ def buffered_stream(
                     except StopIteration:
                         continue
     return IterableDataset.from_generator(generator)
+
 
 def load_datasets(
     dataset_names: Union[str, List[str]],
@@ -96,14 +98,17 @@ def load_datasets(
                 download_mode=download_mode
             )
             if streaming and prefetch_buffer > 0:
-                ds = buffered_stream(ds, prefetch=prefetch_buffer, max_workers=max_workers)
-                logger.info("Applied prefetch buffer=%d, workers=%d", prefetch_buffer, max_workers)
+                ds = buffered_stream(
+                    ds, prefetch=prefetch_buffer, max_workers=max_workers)
+                logger.info("Applied prefetch buffer=%d, workers=%d",
+                            prefetch_buffer, max_workers)
             loaded[name] = ds
             logger.info("Successfully loaded '%s'", name)
         except Exception as e:
             logger.error("Failed to load '%s': %s", name, e)
             raise
     return loaded
+
 
 # Example usage
 if __name__ == "__main__":

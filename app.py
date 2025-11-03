@@ -9,6 +9,7 @@ def lint_code(code):
     """
     Formats code with autopep8 and runs flake8 to collect linting issues.
     Returns the formatted code plus any flake8 warnings.
+    Uses proper context manager for temp file handling (more efficient).
     """
     # Try to format with autopep8, fall back to original code if it fails
     try:
@@ -18,20 +19,25 @@ def lint_code(code):
               "using original code")
         formatted_code = code
 
-    # Write to temp file for flake8
+    # Use context manager for proper resource management
     with tempfile.NamedTemporaryFile(mode="w+", suffix=".py",
                                      delete=False) as tmp:
         tmp.write(formatted_code)
         tmp_path = tmp.name
-    # Run flake8
-    result = subprocess.run(
-        ["flake8", tmp_path],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
-    os.unlink(tmp_path)
-    issues = result.stdout.strip() or "No issues found."
+
+    try:
+        # Run flake8
+        result = subprocess.run(
+            ["flake8", tmp_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        issues = result.stdout.strip() or "No issues found."
+    finally:
+        # Ensure cleanup happens even if subprocess fails
+        os.unlink(tmp_path)
+
     return f"{formatted_code}\n\n# Flake8 issues: {issues}"
 
 
