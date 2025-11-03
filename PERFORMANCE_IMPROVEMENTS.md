@@ -86,7 +86,7 @@ code, message = rest.strip().split(" ", 1)
 # After (single strip and find operation)
 rest_stripped = rest.strip()
 space_idx = rest_stripped.find(" ")
-if space_idx > 0:
+if space_idx > -1:  # -1 means not found
     code = rest_stripped[:space_idx]
     message = rest_stripped[space_idx + 1:]
 ```
