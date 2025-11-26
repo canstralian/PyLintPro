@@ -28,7 +28,8 @@ def lint_code(code):
         ["flake8", tmp_path],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        check=False  # Return result instead of raising on non-zero exit
     )
     os.unlink(tmp_path)
     issues = result.stdout.strip() or "No issues found."

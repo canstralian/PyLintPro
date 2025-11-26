@@ -16,7 +16,7 @@ def lint_code(code):
     except Exception as e:
         print(f"Warning: autopep8 formatting failed ({e}), using original code")
         formatted_code = code
-    
+
     # Write to temp file for flake8
     with tempfile.NamedTemporaryFile(mode="w+", suffix=".py",
                                      delete=False) as tmp:
@@ -27,7 +27,8 @@ def lint_code(code):
         ["flake8", tmp_path],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        check=False  # Return result instead of raising on non-zero exit
     )
     os.unlink(tmp_path)
     issues = result.stdout.strip() or "No issues found."

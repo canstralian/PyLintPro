@@ -23,7 +23,7 @@ async def demo_handler(data):
     price = data['price']
     exchange = data['exchange']
 
-    print(f"📈 {symbol} on {exchange}: ${price:.2f}")
+    print(f"📈 {symbol} on {exchange}: ${price: .2f}")
 
     # For demo purposes, stop after processing 5 data points
     if hasattr(demo_handler, '_demo_count'):
@@ -34,6 +34,7 @@ async def demo_handler(data):
     if demo_handler._demo_count >= 5:
         print("Demo complete - stopping stream")
         return False  # Stop streaming
+    return None
 
 
 @ccxtpro_streamer(

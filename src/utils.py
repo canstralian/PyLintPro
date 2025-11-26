@@ -1,10 +1,11 @@
 # src/utils.py
 
-import subprocess
 import logging
+import subprocess
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
 import yaml
-from typing import List, Dict, Any, Tuple, Optional
 
 
 def safe_run(
@@ -23,7 +24,8 @@ def safe_run(
         stderr=subprocess.PIPE,
         text=True,
         shell=False,      # Prevent shell injection risks
-        timeout=timeout
+        timeout=timeout,
+        check=False       # Return result instead of raising on non-zero exit
     )
     return result.returncode, result.stdout, result.stderr
 
