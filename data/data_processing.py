@@ -10,7 +10,7 @@ a unified sklearn Pipeline, with a CLI interface via Click.
 
 import logging
 from pathlib import Path
-from typing import Optional, List, Union
+from typing import List, Union
 
 import click
 import pandas as pd
@@ -28,7 +28,7 @@ def load_data(file_path: Union[str, Path]) -> pd.DataFrame:
     """Read CSV into DataFrame."""
     file_path = Path(file_path)
     logger.info("Loading data from %s", file_path)
-    df = pd.read_csv(file_path)  # pandas.read_csv 
+    df = pd.read_csv(file_path)  # pandas.read_csv
     logger.info("Data shape: %s", df.shape)
     return df
 
@@ -50,10 +50,10 @@ def main(input_file: str, output_file: str, degree: int, columns: List[str]):
     logger.info("Preparing pipeline for columns: %s", numeric_cols)
 
     pipeline = Pipeline([
-        ("scaler", StandardScaler()),            # sklearn.preprocessing.StandardScaler 
+        ("scaler", StandardScaler()),            # sklearn.preprocessing.StandardScaler
         ("poly", PolynomialFeatures(
             degree=degree, include_bias=False
-        ))                                      # sklearn.preprocessing.PolynomialFeatures 
+        ))                                      # sklearn.preprocessing.PolynomialFeatures
     ])
 
     # Fit-transform only the selected columns

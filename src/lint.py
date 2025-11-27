@@ -3,16 +3,17 @@
 Linting module for PyLintPro
 """
 
-import tempfile
 import os
 import subprocess
+import tempfile
+
 import autopep8
 
 
 def lint_code(code: str) -> str:
     """
     Formats Python code with autopep8 and runs flake8 to collect linting issues.
-    
+
     Args:
         code (str): The Python source code to lint.
 
@@ -36,7 +37,8 @@ def lint_code(code: str) -> str:
         ["flake8", tmp_path],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True
+        text=True,
+        check=False  # Return result instead of raising on non-zero exit
     )
 
     # Clean up temp file

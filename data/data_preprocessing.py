@@ -10,7 +10,7 @@ features, with a CLI interface via Click.
 
 import logging
 from pathlib import Path
-from typing import Optional, Union, List
+from typing import Union
 
 import click
 import pandas as pd
@@ -30,7 +30,7 @@ def load_data(file_path: Union[str, Path]) -> pd.DataFrame:
     """Load dataset from a CSV file."""
     file_path = Path(file_path)
     logger.info("Loading data from %s", file_path)
-    df = pd.read_csv(file_path)  # pandas.read_csv 
+    df = pd.read_csv(file_path)  # pandas.read_csv
     logger.info("Data shape: %s", df.shape)
     return df
 
@@ -64,9 +64,9 @@ def build_preprocessing_pipeline(
     # Build ColumnTransformer
     preprocessing = ColumnTransformer(
         transformers=[
-            ("num", num_imputer, 
+            ("num", num_imputer,
              lambda df: df.select_dtypes(include=["int64", "float64"]).columns.tolist()),
-            ("cat", cat_pipeline, 
+            ("cat", cat_pipeline,
              lambda df: df.select_dtypes(include=["object", "category"]).columns.tolist())
         ],
         remainder="drop",

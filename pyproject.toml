@@ -21,12 +21,16 @@ dependencies = [
 dev = [
     "pytest>=7.0",          # Testing framework
     "pytest-cov>=4.0",      # Coverage reporting
+    "pytest-asyncio>=0.21", # Async test support
     "black>=23.0",          # Code formatter
     "flake8>=6.0",          # Linting
     "flake8-pyproject>=1.2.3",  # Flake8 config support in pyproject.toml
     "autopep8>=2.0.4",      # Additional auto-formatting
     "pre-commit>=3.0",      # Pre-commit hooks for code quality
     "mypy>=1.0",            # Type checking
+    "pylint>=3.0",          # Comprehensive code analysis
+    "pylint-flask>=0.6",    # Flask-specific pylint checks
+    "bandit>=1.7",          # Security vulnerability scanner
 ]
 
 [tool.black]
@@ -53,6 +57,25 @@ testpaths = [
 
 
 [tool.mypy]
-python_version = 3.8
+python_version = "3.8"
 ignore_missing_imports = true
 strict = true
+
+[tool.pylint.main]
+ignore = [".git", "__pycache__", "build", "dist", ".venv", "venv"]
+jobs = 0
+py-version = "3.8"
+
+[tool.pylint.messages_control]
+disable = ["C0114", "C0115", "C0116", "W0511", "R0903"]
+
+[tool.pylint.format]
+max-line-length = 88
+
+[tool.pylint.design]
+max-args = 7
+max-attributes = 10
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv", "venv"]
+skips = ["B101"]  # Skip assert warnings in tests
