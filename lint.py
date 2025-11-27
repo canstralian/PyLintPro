@@ -4,11 +4,12 @@ PyLintPro CLI - Command line interface for Python code linting and formatting.
 """
 
 import argparse
-import autopep8
-import subprocess
 import sys
 import os
 from pathlib import Path
+
+from src.lint import lint_code
+from src.utils import split_lint_result
 
 
 def lint_file(file_path, ignore_rules=None, output_path=None):
@@ -28,28 +29,24 @@ def lint_file(file_path, ignore_rules=None, output_path=None):
         with open(file_path, 'r', encoding='utf-8') as f:
             code = f.read()
 
-        # Try to format with autopep8, fall back to original code if it fails
-        try:
-            formatted_code = autopep8.fix_code(code, options={"aggressive": 1})
-        except Exception as e:
-            print(f"Warning: autopep8 formatting failed ({e}), "
-                  "using original code")
-            formatted_code = code
-
-        # Prepare flake8 command
-        flake8_cmd = ["flake8", file_path]
+        # Use centralized linting logic from src/lint.py
+        # Note: ignore_rules parameter is not currently supported by lint_code
+        # This could be enhanced in the future
         if ignore_rules:
-            flake8_cmd.extend(["--ignore", ignore_rules])
+            print(f"Warning: --ignore parameter ({ignore_rules}) is not yet supported")
 
-        # Run flake8
-        result = subprocess.run(
-            flake8_cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
+        result = lint_code(code)
+        formatted_code, issues = split_lint_result(result)
 
-        flake8_issues = result.stdout.strip() or "No issues found."
+        # Format issues for display
+        if issues:
+            flake8_issues = "\n".join([
+                f"{issue['file']}:{issue['line']}:{issue['column']}: "
+                f"{issue['code']} {issue['message']}"
+                for issue in issues
+            ])
+        else:
+            flake8_issues = "No issues found."
 
         # Save corrected output
         if output_path:

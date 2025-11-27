@@ -15,8 +15,10 @@ import logging
 import time
 from typing import Any, Callable, Dict, Optional
 
+from src.utils import setup_logging
+
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+setup_logging()
 logger = logging.getLogger(__name__)
 
 

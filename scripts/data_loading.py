@@ -8,11 +8,10 @@ from datasets import load_dataset, DatasetDict, IterableDataset
 from tqdm.auto import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from src.utils import setup_logging
+
 # Configure module-level logger
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-)
+setup_logging(fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
 logger = logging.getLogger(__name__)
 
 def buffered_stream(
