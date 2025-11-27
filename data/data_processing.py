@@ -17,20 +17,12 @@ import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, PolynomialFeatures
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-)
-logger = logging.getLogger(__name__)
+from data.utils import load_data
+from src.utils import setup_logging
 
-def load_data(file_path: Union[str, Path]) -> pd.DataFrame:
-    """Read CSV into DataFrame."""
-    file_path = Path(file_path)
-    logger.info("Loading data from %s", file_path)
-    df = pd.read_csv(file_path)  # pandas.read_csv 
-    logger.info("Data shape: %s", df.shape)
-    return df
+# Configure logging
+setup_logging(fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
+logger = logging.getLogger(__name__)
 
 @click.command()
 @click.option("--input-file", "-i", type=click.Path(exists=True), required=True,

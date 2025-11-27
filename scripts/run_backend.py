@@ -18,13 +18,10 @@ from pydantic import BaseModel
 import uvicorn
 
 from src.lint import lint_code
-from src.utils import parse_flake8_output
+from src.utils import split_lint_result, setup_logging
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-)  # Basic logging setup  [oai_citation_attribution:6‡Python documentation](https://docs.python.org/3/library/logging.html?utm_source=chatgpt.com)
+setup_logging(fmt="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
 logger = logging.getLogger("run_backend")
 
 # Pydantic models for request/response
@@ -75,12 +72,8 @@ def lint_endpoint(request: LintRequest):
     logger.info("Received lint request: %d characters", len(request.code))
     try:
         result = lint_code(request.code)
-        # Split formatted code and issues
-        if "# Flake8 issues:" in result:
-            formatted, issues_str = result.split("# Flake8 issues:\n", 1)
-        else:
-            formatted, issues_str = result, ""
-        issues = parse_flake8_output(issues_str)
+        # Split formatted code and issues using centralized utility
+        formatted, issues = split_lint_result(result)
         return LintResponse(formatted_code=formatted, issues=issues)
     except Exception as e:
         logger.error("Error during linting: %s", e, exc_info=True)

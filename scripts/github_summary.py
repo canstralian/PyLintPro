@@ -14,6 +14,8 @@ from typing import Dict, List, Any, Optional
 import json
 import os
 
+from src.utils import setup_logging
+
 
 class GitHubSummaryGenerator:
     """Generates summaries of GitHub repository activity."""
@@ -213,13 +215,10 @@ def main():
     )
     
     args = parser.parse_args()
-    
+
     # Setup logging
-    log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(
-        level=log_level,
-        format="%(asctime)s - %(levelname)s - %(message)s"
-    )
+    log_level = "DEBUG" if args.verbose else "INFO"
+    setup_logging(level=log_level, fmt="%(asctime)s - %(levelname)s - %(message)s")
     
     # Generate summary
     generator = GitHubSummaryGenerator(args.owner, args.repo, args.token)

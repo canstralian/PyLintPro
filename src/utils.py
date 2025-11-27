@@ -2,9 +2,12 @@
 
 import subprocess
 import logging
+import tempfile
+import os
 from pathlib import Path
 import yaml
 from typing import List, Dict, Any, Tuple, Optional
+from contextlib import contextmanager
 
 
 def safe_run(
@@ -96,3 +99,46 @@ def setup_logging(
     logging.basicConfig(level=level, format=fmt)
     logging.getLogger(name).debug("Logging configured for %s at %s level",
                                   name, level)
+
+
+def split_lint_result(result: str) -> Tuple[str, List[Dict[str, Any]]]:
+    """
+    Split lint_code result into formatted code and parsed issues.
+
+    Args:
+        result: The output from lint_code() containing formatted code
+                and optionally Flake8 issues
+
+    Returns:
+        Tuple of (formatted_code, parsed_issues)
+    """
+    if "# Flake8 issues:" in result:
+        formatted, issues_str = result.split("# Flake8 issues:\n", 1)
+    else:
+        formatted, issues_str = result, ""
+    issues = parse_flake8_output(issues_str)
+    return formatted, issues
+
+
+@contextmanager
+def temp_python_file(code: str):
+    """
+    Create a temporary Python file for linting purposes.
+
+    Args:
+        code: Python code to write to the temporary file
+
+    Yields:
+        Path to the temporary file
+
+    Example:
+        with temp_python_file(code) as tmp_path:
+            result = subprocess.run(["flake8", tmp_path], ...)
+    """
+    with tempfile.NamedTemporaryFile(mode="w+", suffix=".py", delete=False) as tmp:
+        tmp.write(code)
+        tmp_path = tmp.name
+    try:
+        yield tmp_path
+    finally:
+        os.unlink(tmp_path)

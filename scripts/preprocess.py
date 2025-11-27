@@ -7,7 +7,7 @@ from pathlib import Path
 
 from datasets import load_dataset, set_progress_bar_enabled
 from src.lint import lint_code
-from src.utils import parse_flake8_output
+from src.utils import split_lint_result, setup_logging
 
 def preprocess_example(example: dict) -> dict:
     """
@@ -17,12 +17,8 @@ def preprocess_example(example: dict) -> dict:
     code = example.get("code") or example.get("text") or ""
     # lint_code returns formatted code plus a Flake8 issues section
     result = lint_code(code)
-    if "# Flake8 issues:\n" in result:
-        formatted, issues_str = result.split("# Flake8 issues:\n", 1)
-    else:
-        formatted, issues_str = result, ""
-    # Parse the Flake8 output into structured data
-    issues = parse_flake8_output(issues_str)
+    # Use centralized utility to split result
+    formatted, issues = split_lint_result(result)
     return {
         "original_code": code,
         "formatted_code": formatted,
@@ -60,10 +56,7 @@ def main():
     args = parser.parse_args()
 
     # Set up logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s"
-    )
+    setup_logging(fmt="%(asctime)s | %(levelname)s | %(message)s")
     set_progress_bar_enabled(not args.disable_progress)
 
     logging.info("Loading dataset %s (split=%s)", args.dataset, args.split)
