@@ -163,7 +163,7 @@ class GitHubSummaryGenerator:
 
     def generate_summary(self) -> str:
         """Generate a complete summary of yesterday's commits and open issues."""
-        logging.info(f"Generating summary for {self.owner}/{self.repo}")
+        logging.info("Generating summary for %s/%s", self.owner, self.repo)
 
         # Fetch data
         commits = self.get_yesterday_commits()
