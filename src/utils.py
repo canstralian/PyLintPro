@@ -32,6 +32,7 @@ def parse_flake8_output(output: str) -> List[Dict[str, Any]]:
     """
     Parse Flake8 stdout into structured records.
     Each record contains: file, line, column, code, message.
+    Optimized to reduce string operations.
     """
     issues = []
     for line in output.splitlines():
@@ -39,14 +40,18 @@ def parse_flake8_output(output: str) -> List[Dict[str, Any]]:
         parts = line.split(":", 3)
         if len(parts) == 4:
             file_path, line_no, col_no, rest = parts
-            code, message = rest.strip().split(" ", 1)
-            issues.append({
-                "file": file_path,
-                "line": int(line_no),
-                "column": int(col_no),
-                "code": code,
-                "message": message
-            })
+            rest_stripped = rest.strip()
+            space_idx = rest_stripped.find(" ")
+            if space_idx > -1:  # -1 means not found
+                code = rest_stripped[:space_idx]
+                message = rest_stripped[space_idx + 1:]
+                issues.append({
+                    "file": file_path,
+                    "line": int(line_no),
+                    "column": int(col_no),
+                    "code": code,
+                    "message": message
+                })
     return issues
 
 
